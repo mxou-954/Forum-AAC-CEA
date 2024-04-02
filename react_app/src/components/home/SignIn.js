@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../style/styles.css';
 import { useUser } from '../../UserContext'; // Ajustez le chemin selon la structure de votre projet
+import { Link } from 'react-router-dom';
 
 
 export default function Connexion() {
@@ -101,7 +102,7 @@ export default function Connexion() {
             <span>Password</span>
           </label>
           <button className="submit" type="submit">Se Connecter</button>
-          <p className="signin">Créer un compte ? <a href="./LogIn">S'inscrire</a></p>
+          <p className="signin">Créer un compte ? <Link href="/LogIn">S'inscrire</Link></p>
         </form>
       </div>
     );

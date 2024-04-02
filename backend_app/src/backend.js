@@ -3,7 +3,8 @@ const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors'); 
 const session = require('express-session');
-
+const nodemailer = require('nodemailer');
+const bodyParser = require('body-parser');
 
 app.use(cors({
     origin: 'http://localhost:3001', // Spécifiez l'origine de votre application frontend
@@ -181,7 +182,35 @@ app.get("/api/profil/:id", async (req, res) => {
 
 
 
-
+const transporter = nodemailer.createTransport({
+    service: 'gmail', // Utilisez votre service de messagerie
+    auth: {
+      user: 'mcourbeyrette1@gmail.com', // Remplacez par votre adresse e-mail
+      pass: 'ymlw aaoa zexv uppi', // Remplacez par votre mot de passe ou token d'application
+    },
+  });
+  
+  // Route pour envoyer un e-mail
+  app.post('/api/sendEmail', (req, res) => {
+    const { prenom, nom, email, objet, message } = req.body;
+  
+    const mailOptions = {
+      from: email, // L'adresse e-mail de l'expéditeur (peut être la vôtre)
+      to: 'mcourbeyrette1@gmail.com', // L'adresse e-mail du destinataire
+      subject: objet,
+      text: `Message de ${prenom} ${nom} (${email}): ${message}`,
+    };
+  
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log(error);
+        res.status(500).send('Erreur lors de l\'envoi de l\'e-mail.');
+      } else {
+        console.log('Email envoyé: ' + info.response);
+        res.status(200).send('E-mail envoyé avec succès.');
+      }
+    });
+  });
 
 
 

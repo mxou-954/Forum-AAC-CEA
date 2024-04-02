@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useUser } from '../../UserContext';
 import '../style/styles.css';
+import { Link } from 'react-router-dom';
 
 export default function Connexion() {
   const [prenom, setPrenom] = useState('');
@@ -83,7 +84,7 @@ export default function Connexion() {
           <span>Confirm password</span>
         </label>
         <button className="submit" type="submit">S'inscrire</button>
-        <p className="signin">Deja un compte ? <a href="./SignIn">Se connecter</a></p>
+        <p className="signin">Deja un compte ? <Link to="/SignIn">Se connecter</Link></p>
       </form>
     </div>
   );

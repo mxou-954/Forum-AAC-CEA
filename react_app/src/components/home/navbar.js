@@ -65,7 +65,7 @@ const Navbar = () => {
             <Link to="/bank-account"><div className="icon"><i aria-hidden="true" className="ti ti-building-bank"></i></div><span>Légal</span></Link>
           </li>
           <li className="menu-item">
-            <Link to="/earning"><div className="icon"><i aria-hidden="true" className="ti ti-wallet"></i></div><span>nous contacter</span></Link>
+            <Link to="/Contact"><div className="icon"><i aria-hidden="true" className="ti ti-wallet"></i></div><span>nous contacter</span></Link>
           </li>
           <li className="menu-item">
             <Link to="/LogIn"><div className="icon"><i aria-hidden="true" className="ti ti-user"></i></div><span>mon compte</span></Link>
