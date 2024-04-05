@@ -1,3 +1,21 @@
+/* Stylise toute la barre de défilement (la piste) */
+::-webkit-scrollbar {
+  width: 12px; /* Largeur de la barre de défilement */
+}
+
+/* Stylise le bouton de défilement (le pouce) */
+::-webkit-scrollbar-thumb {
+  background-color: #7c7c7c; /* Couleur du pouce */
+}
+
+/* Stylise le fond de la barre de défilement (la piste) */
+::-webkit-scrollbar-track {
+  background: #494949; /* Couleur de fond de la piste */
+}
+
+
+
+
 .mid {
     display: flex;
     justify-content: center;
@@ -487,4 +505,719 @@ a {
   padding-right: 10%;
   font-size: 1.5rem;
   margin-top: 2.5%;
+}
+
+.mid_forum{
+  display: flex;
+  position: relative;
+  height: 100%;  
+  width: 100%; /* Assure que le conteneur prend toute la largeur */
+
+}
+
+.vertical-line {
+  height: 100%;  
+  width: 1px; 
+  background-color: rgb(172, 172, 172); /* Couleur du trait */
+  margin-left: 0%;
+  self-align: stretch;
+}
+
+.wrapper_left {
+  display: flex; /* Active Flexbox pour ce conteneur */
+  flex-direction: column;
+  width: 30%; /* Largeur ajustée à votre besoin, ici 50% comme dans votre exemple */
+  height: 100%;  
+}
+
+.wrapper_right {
+  width: 70%;
+  overflow-y: auto; /* Ajoute une barre de défilement verticale seulement si nécessaire */
+  height: 100%;  
+}
+
+.forum_ajouterImage{
+  height: 250px;
+  width: 400px;
+  margin-top: 10%;
+  margin-left: 10%;
+  justify-content: center;
+  background-color: #0f0f0f;
+  border-radius: 20px;
+}
+
+.forum_wrapper_left_h2{
+  margin-top: 10%;
+  
+}
+
+.forum_div_button{
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ margin-top: 10%;
+
+}
+
+.button_Import {
+  --main-focus: #2d8cf0;
+  --font-color: #323232;
+  --bg-color-sub: #dedede;
+  --bg-color: #eee;
+  --main-color: #323232;
+  position: relative;
+  width: 150px;
+  height: 40px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  margin-bottom: 2%;
+  border: 2px solid var(--main-color);
+  box-shadow: 4px 4px var(--main-color);
+  background-color: var(--bg-color);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.button_Import, .button__icon, .button__text {
+  transition: all 0.3s;
+}
+
+.button_Import .button__text {
+  transform: translateX(22px);
+  color: var(--font-color);
+  font-weight: 600;
+}
+
+.button_Import .button__icon {
+  position: absolute;
+  transform: translateX(109px);
+  height: 100%;
+  width: 39px;
+  background-color: var(--bg-color-sub);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button_Import .svg {
+  width: 20px;
+  fill: var(--main-color);
+}
+
+.button_Import:hover {
+  background: var(--bg-color);
+}
+
+.button_Import:hover .button__text {
+  color: transparent;
+}
+
+.button_Import:hover .button__icon {
+  width: 148px;
+  transform: translateX(0);
+}
+
+.button_Import:active {
+  transform: translate(3px, 3px);
+  box-shadow: 0px 0px var(--main-color);
+}
+
+.name_file{
+  margin-bottom: 5%;
+}
+
+
+.button_Send {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 6px 12px;
+  gap: 8px;
+  height: 32px;
+  width: 124px;
+  border: none;
+  background: #00bfff;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.lable {
+  line-height: 20px;
+  font-size: 17px;
+  color: #fff;
+  font-family: sans-serif;
+  letter-spacing: 1px;
+}
+
+.button_Send:hover {
+  background: #00bfff96;
+}
+
+.button_Send:hover .svg-icon {
+  animation: msg 2s linear infinite;
+}
+
+@keyframes msg {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  15% {
+    transform: translateX(1px);
+  }
+
+  30% {
+    transform: scale(1.1);
+  }
+
+  45% {
+    transform: translateY(1px);
+  }
+
+  60% {
+    transform: translateY(0px);
+  }
+
+  75% {
+    transform: scale(1);
+  }
+
+  90% {
+    transform: translateX(-px);
+  }
+
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+
+.forum_wrapper_right_h2{
+  margin-top: 5%;
+  margin-bottom: 5%;
+}
+
+.forum_div_photos {
+  background-color: #181818;
+  width: 100%;
+  /* Supprimez ou ajustez la hauteur si nécessaire */
+  height: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.image-container {
+  margin-top: 20px; /* Ajustez l'espacement entre chaque image */
+}
+
+.image-wrapper {
+  position: relative; /* Permet de positionner le bouton "Like" par rapport à l'image */
+}
+
+.forum_div_photos img {
+  max-width: 1000px; /* Pour occuper toute la largeur du conteneur parent */
+  min-height: auto; /* Pour conserver le ratio d'aspect de l'image */
+  margin-left: 5%;
+  background-color: #0f0f0f;
+  padding: 7%;
+  padding-right: 30%;
+  border-radius: 20px;
+}
+
+
+
+
+
+
+
+
+
+.mid_rules {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  
+}
+
+.wrapper_div_rules{
+  height: auto;
+overflow-y: auto;
+}
+
+.wrapper_div_rules p {
+  margin-bottom: 5%;
+  padding-right: 20%;
+  padding-left: 20%;
+}
+
+.ligneup{
+  margin-top: 1.5%;
+
+}
+.title_rules {
+  margin-bottom: 1%;
+  margin-top: 5%;
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -1px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding-left: 30px;
+  color: #00bfff;
+}
+
+.title_rules::before {
+  width: 18px;
+  height: 18px;
+}
+
+.title_rules::after {
+  width: 18px;
+  height: 18px;
+  animation: pulse 1s linear infinite;
+}
+
+.title_rules::before,
+.title_rules::after {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  left: 0px;
+  background-color: #00bfff;
+}
+
+
+.ligneHorizontale {
+  height: 1px;
+  background-color: rgb(172, 172, 172);
+  width: 100%;
+  self-align: stretch;
+
+}
+
+
+
+.form_titre_forum {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 350px;
+  padding: 20px;
+  border-radius: 20px;
+  margin-top: 10%;
+  margin-left: 15%;
+  position: relative;
+  background-color: #0f0f0f;
+  color: #fff;
+}
+
+
+.form_titre_forum label {
+  position: relative;
+}
+
+.form_titre_forum label .input {
+  background-color: #292929;
+  color: #fff;
+  width: 100%;
+  padding: 20px 0px 05px 0px;
+  outline: 0;
+  border: 1px solid rgba(105, 105, 105, 0.397);
+  border-radius: 10px;
+}
+
+.form_titre_forum label .input + span {
+  color: rgba(255, 255, 255, 0.5);
+  position: absolute;
+  left: 10px;
+  top: 0px;
+  font-size: 0.9em;
+  cursor: text;
+  transition: 0.3s ease;
+}
+
+.form_titre_forum label .input:placeholder-shown + span {
+  top: 12.5px;
+  font-size: 0.9em;
+}
+
+.form_titre_forum label .input:focus + span,
+.form_titre_forum label .input:valid + span {
+  color: #00bfff;
+  top: 5px;
+  font-size: 0.7em;
+  font-weight: 600;
+}
+
+.like-button{
+  position: absolute;
+  bottom: 40%; /* Ajustez la position verticale du bouton "Like" */
+  right: 20%; /* Ajustez la position horizontale du bouton "Like" */
+  width: 100px;
+  height: 40px;
+  border-radius: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.349);
+  background-color: rgb(12, 12, 12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition-duration: 0.3s;
+  overflow: hidden;
+}
+
+.IconContainer_like {
+  width: 30px;
+  height: 30px;
+  background: linear-gradient(to bottom, rgb(255, 136, 255), rgb(172, 70, 255));
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  z-index: 2;
+  transition-duration: 0.3s;
+}
+
+.icon_like {
+  border-radius: 1px;
+}
+
+.text_like {
+  height: 100%;
+  width: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  z-index: 1;
+  transition-duration: 0.3s;
+  font-size: 1.04em;
+}
+
+.like-button:hover .IconContainer_like {
+  width: 90px;
+  transition-duration: 0.3s;
+}
+
+.like-button:hover .text_like {
+  transform: translate(10px);
+  width: 0;
+  font-size: 0;
+  transition-duration: 0.3s;
+}
+
+.like-button:active {
+  transform: scale(0.95);
+  transition-duration: 0.3s;
+}
+
+
+
+
+
+
+
+
+
+
+.bookmarkBtn {
+  position: absolute;
+  bottom: 30%; /* Ajustez la position verticale du bouton "Like" */
+  right: 20%; /* Ajustez la position horizontale du bouton "Like" */
+  width: 100px;
+  height: 40px;
+  border-radius: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.349);
+  background-color: rgb(12, 12, 12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition-duration: 0.3s;
+  overflow: hidden;
+}
+
+.IconContainer {
+  width: 30px;
+  height: 30px;
+  background: linear-gradient(to bottom, rgb(255, 136, 255), rgb(172, 70, 255));
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  z-index: 2;
+  transition-duration: 0.3s;
+}
+
+.icon {
+  border-radius: 1px;
+}
+
+.text {
+  height: 100%;
+  width: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  z-index: 1;
+  transition-duration: 0.3s;
+  font-size: 1.04em;
+}
+
+.bookmarkBtn:hover .IconContainer {
+  width: 90px;
+  transition-duration: 0.3s;
+}
+
+.bookmarkBtn:hover .text {
+  transform: translate(10px);
+  width: 0;
+  font-size: 0;
+  transition-duration: 0.3s;
+}
+
+.bookmarkBtn:active {
+  transform: scale(0.95);
+  transition-duration: 0.3s;
+}
+
+
+
+
+
+
+
+.bookmarkBtn_delete {
+  position: absolute;
+  bottom: 10%; /* Ajustez la position verticale du bouton "Like" */
+  right: 20%; /* Ajustez la position horizontale du bouton "Like" */
+  width: 100px;
+  height: 40px;
+  border-radius: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.349);
+  background-color: rgb(12, 12, 12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition-duration: 0.3s;
+  overflow: hidden;
+}
+
+.IconContainer_delete {
+  width: 30px;
+  height: 30px;
+  background: linear-gradient(to bottom, rgb(255, 136, 255), rgb(172, 70, 255));
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  z-index: 2;
+  transition-duration: 0.3s;
+}
+
+.icon_delete {
+  border-radius: 1px;
+}
+
+.text_delete {
+  height: 100%;
+  width: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  z-index: 1;
+  transition-duration: 0.3s;
+  font-size: 1.04em;
+}
+
+.bookmarkBtn_delete:hover .IconContainer_delete {
+  width: 90px;
+  transition-duration: 0.3s;
+}
+
+.bookmarkBtn_delete:hover .text_delete {
+  transform: translate(10px);
+  width: 0;
+  font-size: 0;
+  transition-duration: 0.3s;
+}
+
+.bookmarkBtn_delete:active {
+  transform: scale(0.95);
+  transition-duration: 0.3s;
+}
+
+.bookmarkBtn_download {
+  position: absolute;
+  bottom: 20%; /* Ajustez la position verticale du bouton "Like" */
+  right: 20%; /* Ajustez la position horizontale du bouton "Like" */
+  width: 100px;
+  height: 40px;
+  border-radius: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.349);
+  background-color: rgb(12, 12, 12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition-duration: 0.3s;
+  overflow: hidden;
+}
+
+.IconContainer_download {
+  width: 30px;
+  height: 30px;
+  background: linear-gradient(to bottom, rgb(255, 136, 255), rgb(172, 70, 255));
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  z-index: 2;
+  transition-duration: 0.3s;
+}
+
+.icon_download {
+  border-radius: 1px;
+}
+
+.text_download {
+  height: 100%;
+  width: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  z-index: 1;
+  transition-duration: 0.3s;
+  font-size: 1.04em;
+}
+
+.bookmarkBtn_download:hover .IconContainer_download {
+  width: 90px;
+  transition-duration: 0.3s;
+}
+
+.bookmarkBtn_download:hover .text_download {
+  transform: translate(10px);
+  width: 0;
+  font-size: 0;
+  transition-duration: 0.3s;
+}
+
+.bookmarkBtn_download:active {
+  transform: scale(0.95);
+  transition-duration: 0.3s;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.wrapper_left_viewer {
+  display: flex; /* Active Flexbox pour ce conteneur */
+  align-items: center;
+  width: 55%; /* Largeur ajustée à votre besoin, ici 50% comme dans votre exemple */
+  height: 100%;  
+  margin-left: 5%;
+}
+
+.wrapper_right_viewer {
+  display: flex; /* Active Flexbox pour ce conteneur */
+  align-items: center;
+  width: 40%;
+justify-content: center;  height: 100%;  
+}
+
+.card {
+  width: 400px;
+  background-color: #252525;
+  border-radius: 5px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.chat-header {
+  background-color: #333;
+  color: #fff;
+  padding: 10px;
+  font-size: 18px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  border-bottom: 1px solid #ffffff;
+
+}
+
+.chat-window {
+  height: 500px;
+  overflow-y: scroll;
+}
+
+.message-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.chat-input {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-top: 1px solid #ffffff;
+}
+
+.message-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 5px;
+  border-radius: 5px;
+
+  font-size: 14px;
+}
+
+.send-button {
+  border: none;
+  outline: none;
+  background-color: #333;
+  color: #fff;
+  font-size: 14px;
+  padding: 5px 10px;
+  border-radius: 5px;
+
+  cursor: pointer;
+}
+
+.send-button:hover {
+  background-color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
+  box-shadow: 0 4px 18px 0 rgba(0, 0, 0, 0.25);
 }

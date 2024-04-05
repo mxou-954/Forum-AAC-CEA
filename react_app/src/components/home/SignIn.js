@@ -102,7 +102,7 @@ export default function Connexion() {
             <span>Password</span>
           </label>
           <button className="submit" type="submit">Se Connecter</button>
-          <p className="signin">Créer un compte ? <Link href="/LogIn">S'inscrire</Link></p>
+          <p className="signin">Créer un compte ? <Link to="/LogIn">S'inscrire</Link></p>
         </form>
       </div>
     );

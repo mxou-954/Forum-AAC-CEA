@@ -45,10 +45,10 @@ const Navbar = () => {
         <h3>AAC-CEA-PHOTO</h3>
         <ul className="menu">
           <li className="menu-item">
-            <Link to="/report"><div className="icon"><i aria-hidden="true" className="ti ti-clipboard-data"></i></div><span>Forum</span></Link>
+            <Link to="/forum"><div className="icon"><i aria-hidden="true" className="ti ti-clipboard-data"></i></div><span>Forum</span></Link>
           </li>
           <li className="menu-item">
-            <Link to="/advertisement"><div className="icon"><i aria-hidden="true" className="ti ti-speakerphone"></i></div><span>Règles</span></Link>
+            <Link to="/règles"><div className="icon"><i aria-hidden="true" className="ti ti-speakerphone"></i></div><span>Règles</span></Link>
           </li>
           <li className="menu-item">
             <Link to="/affiliate"><div className="icon"><i aria-hidden="true" className="ti ti-brand-cashapp"></i></div><span>Mes photos</span></Link>
@@ -59,7 +59,7 @@ const Navbar = () => {
         </ul>
       </div>
       <div className="group">
-        <h3>ABOUT ME</h3>
+        <h3>AUTRES</h3>
         <ul className="menu">
           <li className="menu-item">
             <Link to="/bank-account"><div className="icon"><i aria-hidden="true" className="ti ti-building-bank"></i></div><span>Légal</span></Link>

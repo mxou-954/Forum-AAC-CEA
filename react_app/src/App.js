@@ -9,6 +9,10 @@ import Test from "./components/home/test"
 import Navbar from "./components/home/navbar"
 import './components/style/styles.css'
 import Contact from "./components/home/contact"
+import Forum from "./components/home/forum"
+import Regles from "./components/home/règles"
+import ImageViewer from './components/home/ImageViewer'; 
+
 
 function App() {
   return (
@@ -19,6 +23,9 @@ function App() {
     <main>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path='/forum' element={<Forum />} />
+        <Route path="/image/:fileId" element={<ImageViewer />} />
+        <Route path='/règles' element={<Regles />} />
         <Route path='/LogIn' element={<LogIn />} />
         <Route path='/SignIn' element={<SignIn />} />
         <Route path='/Test' element={<Test />} />
