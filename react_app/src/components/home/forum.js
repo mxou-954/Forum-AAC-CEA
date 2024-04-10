@@ -7,6 +7,9 @@ export default function Connexion() {
   const fileInputRef = useRef(null);
   const [fileName, setFileName] = useState('Aucun fichier sélectionné');
   const [images, setImages] = useState([]);
+  const [title, setTitle] = useState('');
+const [description, setDescription] = useState('');
+const [file, setFile] = useState(null);
 
   const handleButtonClick = () => {
     fileInputRef.current.click();
@@ -25,6 +28,8 @@ export default function Connexion() {
     }
   
     const formData = new FormData();
+    formData.append('title', title);
+  formData.append('description', description);
     formData.append('image', file);
   
     fetch('http://localhost:3000/api/photo', {
@@ -56,6 +61,49 @@ export default function Connexion() {
     fetchImages(); // Appeler fetchImages au montage du composant pour charger toutes les images disponibles
   }, []);
 
+  const handleDelete = async (fileId) => {
+    // Demander une confirmation avant de procéder
+    const isConfirmed = window.confirm("Êtes-vous sûr de vouloir supprimer cette image ?");
+    
+    if (!isConfirmed) {
+      return; // Si l'utilisateur annule, ne rien faire
+    }
+  
+    try {
+      const response = await fetch(`http://localhost:3000/api/image/${fileId}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+  
+      // Logique pour gérer la suppression côté client, comme rafraîchir la liste d'images ou retirer l'image supprimée du DOM
+      console.log('Image supprimée avec succès');
+      // Ici, vous pouvez ajouter la logique pour rafraîchir la liste des images ou informer l'utilisateur de la suppression réussie
+    } catch (error) {
+      console.error('Erreur lors de la suppression de l\'image:', error);
+    }
+  };
+
+  const handleDownload = async (fileId) => {
+    try {
+      const response = await fetch(`http://localhost:3000/api/image/download/${fileId}`);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const blob = await response.blob();
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = downloadUrl;
+      a.download = 'image'; // Vous pouvez spécifier ici le nom sous lequel vous souhaitez enregistrer l'image
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(downloadUrl);
+    } catch (error) {
+      console.error('Download failed:', error);
+    }
+  };
 
   return (
     <div className='mid_forum'>
@@ -84,16 +132,26 @@ export default function Connexion() {
         </button>
         </div>
       </div>
-      <form className="form_titre_forum" >
-        <label>
-          <input className="input" type="text" />
-          <span>Titre</span>
-        </label>
-        <label>
-          <input className="input" type="text"/>
-          <span>Description</span>
-        </label>
-      </form>
+      <form className="form_titre_forum" onSubmit={handleSubmit}>
+          <label>
+            <input 
+              className="input" 
+              type="text" 
+              value={title} 
+              onChange={(e) => setTitle(e.target.value)} 
+            />
+            <span>Titre</span>
+          </label>
+          <label>
+            <input 
+              className="input" 
+              type="text"
+              value={description} 
+              onChange={(e) => setDescription(e.target.value)}
+            />
+            <span>Description</span>
+          </label>
+        </form>
     </div>
 
       <div className="vertical-line"></div>
@@ -103,8 +161,9 @@ export default function Connexion() {
         <div className="ligneHorizontale"></div>
 
         <div className='forum_div_photos'>
-        {images.map((imageUrl, index) => {
-    const fileId = imageUrl.split('/').pop(); // Extrait le dernier segment de l'URL comme fileId
+        { [...images].reverse().map((imageUrl, index) => {
+    const fileId = imageUrl.split('/').pop(); 
+
     return (
       // Utilisation d'un fragment JSX pour envelopper les éléments adjacents
       <React.Fragment key={index}> 
@@ -137,7 +196,7 @@ export default function Connexion() {
   <p class="text">Save</p>
 </button>
 
-<button class="bookmarkBtn_download">
+<button class="bookmarkBtn_download" onClick={() => handleDownload(fileId)}>
   <span class="IconContainer_download">
   <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-download" height="1.5em" viewBox="0 0 24 24" stroke-width="3" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
   <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
@@ -146,10 +205,10 @@ export default function Connexion() {
   <path d="M12 4l0 12" />
 </svg>
   </span>
-  <p class="text_download">Save</p>
+  <p class="text_download">D/L</p>
 </button>
 
-<button class="bookmarkBtn_delete">
+<button className="bookmarkBtn_delete" onClick={() => handleDelete(fileId)}>
   <span class="IconContainer_delete">
   <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash-filled" height="1.5em" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
   <path stroke="none" d="M0 0h24v24H0z" fill="none"/>

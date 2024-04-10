@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+app.use('/uploads', express.static('uploads'));
 const mongoose = require('mongoose');
 const cors = require('cors'); 
 const session = require('express-session');
@@ -7,6 +8,8 @@ const MongoStore = require('connect-mongo');
 const nodemailer = require('nodemailer');
 const bodyParser = require('body-parser');
 const multer = require('multer');
+const sendingUpload = multer({ dest: 'uploads/' }); // Configurez selon vos besoins
+
 const Grid = require('gridfs-stream');
 let gfs;
 const storage = multer.memoryStorage();
@@ -18,10 +21,11 @@ const upload = multer({ storage: storage });
 app.use(cors({
     origin: 'http://localhost:3001', // Spécifiez l'origine de votre application frontend
     credentials: true, // Permet l'envoi de cookies de session avec les requêtes
+    exposedHeaders: ['X-Photo-Title', 'X-Photo-Description'],
+
 }));
 
 app.use(express.json());
-
 
 
 
@@ -194,18 +198,26 @@ app.get("/api/profil/:id", async (req, res) => {
 
 
 
-app.post('/api/photo', upload.single('image'), (req, res) => {
+const PhotoInfoSchema = new mongoose.Schema({
+  title: String,
+  description: String,
+  fileId: mongoose.Schema.Types.ObjectId, // Référence à l'ID du fichier dans GridFS
+});
+
+const PhotoInfo = mongoose.model('PhotoInfo', PhotoInfoSchema);
+
+app.post('/api/photo', upload.single('image'), async (req, res) => {
   if (!req.file) {
     return res.status(400).send('No file uploaded');
   }
 
-  // Créez un stream de téléchargement pour GridFS
+  // Logique GridFS existante pour sauvegarder l'image
   const bucket = new mongoose.mongo.GridFSBucket(conn.db, {
     bucketName: 'photos'
   });
 
   const uploadStream = bucket.openUploadStream(req.file.originalname);
-  const id = uploadStream.id; // ID du fichier dans GridFS, utile pour le récupérer plus tard
+  const id = uploadStream.id; // ID du fichier dans GridFS
 
   uploadStream.write(req.file.buffer);
   uploadStream.end();
@@ -214,13 +226,26 @@ app.post('/api/photo', upload.single('image'), (req, res) => {
     return res.status(500).send('Erreur lors du téléchargement du fichier');
   });
 
-  uploadStream.on('finish', () => {
-    res.status(201).send({ fileId: id, message: 'Fichier téléchargé avec succès' });
+  uploadStream.on('finish', async () => {
+    // Après avoir sauvegardé l'image, sauvegardez les infos (titre et description) dans une autre collection
+    try {
+      const { title, description } = req.body;
+      await PhotoInfo.create({ title, description, fileId: id });
+      res.status(201).send({ fileId: id, message: 'Fichier et informations téléchargés avec succès' });
+    } catch (error) {
+      res.status(500).send('Erreur lors de la sauvegarde des informations');
+    }
   });
 });
 
 app.get('/api/image/:fileId', async (req, res) => {
   try {
+    const photoInfo = await PhotoInfo.findOne({ fileId: new mongoose.Types.ObjectId(req.params.fileId) });
+
+    if (!photoInfo) {
+      return res.status(404).send('Informations de la photo non trouvées');
+    }
+
     const bucket = new mongoose.mongo.GridFSBucket(conn.db, {
       bucketName: 'photos'
     });
@@ -231,6 +256,11 @@ app.get('/api/image/:fileId', async (req, res) => {
       return res.status(404).send('Fichier non trouvé');
     }
 
+    // Note : Vous ne pouvez pas "pipe" directement l'image ET envoyer du JSON dans la même réponse HTTP.
+    // Vous devez soit utiliser deux routes séparées, soit inclure les informations du fichier dans les headers de la réponse de l'image.
+    // Pour cet exemple, on va ajouter des headers personnalisés pour le titre et la description.
+    res.setHeader('X-Photo-Title', photoInfo.title);
+    res.setHeader('X-Photo-Description', photoInfo.description);
     bucket.openDownloadStream(new mongoose.Types.ObjectId(req.params.fileId)).pipe(res);
   } catch (error) {
     console.error(error);
@@ -269,6 +299,45 @@ app.get('/api/image', async (req, res) => {
   }
 });
 
+app.get('/api/image/download/:fileId', async (req, res) => {
+  try {
+    const bucket = new mongoose.mongo.GridFSBucket(conn.db, {
+      bucketName: 'photos'
+    });
+
+    const file = await conn.db.collection('photos.files').findOne({ _id: new mongoose.Types.ObjectId(req.params.fileId) });
+
+    if (!file) {
+      return res.status(404).send('Fichier non trouvé');
+    }
+
+    // Définit un type MIME par défaut si file.contentType est undefined
+    const contentType = file.contentType || 'application/octet-stream';
+
+    res.setHeader('Content-Type', contentType);
+    res.setHeader('Content-Disposition', `attachment; filename="${file.filename}"`);
+
+    bucket.openDownloadStream(new mongoose.Types.ObjectId(req.params.fileId)).pipe(res);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Erreur serveur');
+  }
+});
+
+app.delete('/api/image/:fileId', async (req, res) => {
+  try {
+    const fileId = new mongoose.Types.ObjectId(req.params.fileId);
+
+    // Supprimer le fichier de GridFS
+    await conn.db.collection('photos.files').deleteOne({ _id: fileId });
+    await conn.db.collection('photos.chunks').deleteMany({ files_id: fileId });
+
+    res.send({ message: 'Fichier supprimé avec succès' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Erreur serveur lors de la suppression du fichier');
+  }
+});
 
 
 
@@ -287,6 +356,10 @@ const chatMessageSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  fileUrl: {
+    type: String,
+    required: false, // le rendre optionnel puisque tous les messages n'auront pas de fichier
+  },
   createdAt: {
     type: Date,
     default: Date.now
@@ -299,7 +372,7 @@ module.exports = ChatMessage;
 
 app.get('/api/messages/:fileId', async (req, res) => {
   try {
-    const messages = await ChatMessage.find({ fileId: req.params.fileId }).sort({ createdAt: -1 });
+    const messages = await ChatMessage.find({ fileId: req.params.fileId }).sort({ createdAt: 1 }); // Modifié ici
     res.json(messages);
   } catch (error) {
     console.error(error);
@@ -308,31 +381,29 @@ app.get('/api/messages/:fileId', async (req, res) => {
 });
 
 // Route pour poster un message
-app.post('/api/messages/:fileId', async (req, res) => {
-    console.log("Tentative de poster un message avec l'email:", req.session.email);
+// Votre configuration existante de multer
+app.post('/api/upload/:fileId', sendingUpload.single('file'), async (req, res) => {
+  if (!req.session.email) {
+    return res.status(401).send({ message: "Utilisateur non identifié." });
+  }
 
-    if (!req.session.email) {
-        return res.status(401).send({ message: "Utilisateur non identifié." });
-    }
-    try {
-      const message = new ChatMessage({
-          fileId: req.params.fileId,
-          text: req.body.text,
-          email: req.session.email
-      });
-      await message.save();
-      res.status(201).json(message);
+  let fileUrl = req.file ? `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}` : '';
+
+  const message = new ChatMessage({
+    fileId: req.params.fileId,
+    email: req.session.email,
+    text: req.body.text, // extrait du FormData
+    ...(req.file && { fileUrl }), // inclut fileUrl uniquement si un fichier est téléchargé
+  });
+
+  try {
+    await message.save();
+    res.status(201).json(message);
   } catch (error) {
-      console.error(error);
-      res.status(500).send('Erreur serveur');
+    console.error(error);
+    res.status(500).send('Erreur serveur');
   }
 });
-
-
-          
-
-
-
 
 
 

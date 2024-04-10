@@ -12,7 +12,10 @@ import Contact from "./components/home/contact"
 import Forum from "./components/home/forum"
 import Regles from "./components/home/règles"
 import ImageViewer from './components/home/ImageViewer'; 
-
+import Options from './components/home/options';
+import Mesphotos from './components/home/mesPhotos';
+import Photosenregistrees from './components/home/photosEnregistrees';
+import Legal from './components/home/legal';
 
 function App() {
   return (
@@ -26,10 +29,14 @@ function App() {
         <Route path='/forum' element={<Forum />} />
         <Route path="/image/:fileId" element={<ImageViewer />} />
         <Route path='/règles' element={<Regles />} />
+        <Route path='/mesPhotos' element={<Mesphotos />} />
+        <Route path='/photosEnregistrees' element={<Photosenregistrees />} />
+        <Route path='/legal' element={<Legal />} />
         <Route path='/LogIn' element={<LogIn />} />
         <Route path='/SignIn' element={<SignIn />} />
         <Route path='/Test' element={<Test />} />
         <Route path='/Contact' element={<Contact /> } />
+        <Route path='/Options' element={<Options /> } />
       </Routes>
     </main>
     </div>

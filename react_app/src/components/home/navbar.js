@@ -51,10 +51,10 @@ const Navbar = () => {
             <Link to="/règles"><div className="icon"><i aria-hidden="true" className="ti ti-speakerphone"></i></div><span>Règles</span></Link>
           </li>
           <li className="menu-item">
-            <Link to="/affiliate"><div className="icon"><i aria-hidden="true" className="ti ti-brand-cashapp"></i></div><span>Mes photos</span></Link>
+            <Link to="/mesPhotos"><div className="icon"><i aria-hidden="true" className="ti ti-brand-cashapp"></i></div><span>Mes photos</span></Link>
           </li>
           <li className="menu-item">
-            <Link to="/insight"><div className="icon"><i aria-hidden="true" className="ti ti-sparkles"></i></div><span>Photos enregistrées</span></Link>
+            <Link to="/photosEnregistrees"><div className="icon"><i aria-hidden="true" className="ti ti-sparkles"></i></div><span>Photos enregistrées</span></Link>
           </li>
         </ul>
       </div>
@@ -62,7 +62,7 @@ const Navbar = () => {
         <h3>AUTRES</h3>
         <ul className="menu">
           <li className="menu-item">
-            <Link to="/bank-account"><div className="icon"><i aria-hidden="true" className="ti ti-building-bank"></i></div><span>Légal</span></Link>
+            <Link to="/legal"><div className="icon"><i aria-hidden="true" className="ti ti-building-bank"></i></div><span>Légal</span></Link>
           </li>
           <li className="menu-item">
             <Link to="/Contact"><div className="icon"><i aria-hidden="true" className="ti ti-wallet"></i></div><span>nous contacter</span></Link>
@@ -71,7 +71,7 @@ const Navbar = () => {
             <Link to="/LogIn"><div className="icon"><i aria-hidden="true" className="ti ti-user"></i></div><span>mon compte</span></Link>
           </li>
           <li className="menu-item">
-            <Link to="/settings"><div className="icon"><i aria-hidden="true" className="ti ti-settings-filled"></i></div><span>options</span></Link>
+            <Link to="/Options"><div className="icon"><i aria-hidden="true" className="ti ti-settings-filled"></i></div><span>options</span></Link>
           </li>
         </ul>
       </div>

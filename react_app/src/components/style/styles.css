@@ -1144,13 +1144,18 @@ overflow-y: auto;
 
 
 .wrapper_left_viewer {
-  display: flex; /* Active Flexbox pour ce conteneur */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; 
   align-items: center;
-  width: 55%; /* Largeur ajustée à votre besoin, ici 50% comme dans votre exemple */
-  height: 100%;  
-  margin-left: 5%;
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  text-align: center;
 }
-
+.wrapper_left_viewer p{
+margin-bottom: 20px;
+}
 .wrapper_right_viewer {
   display: flex; /* Active Flexbox pour ce conteneur */
   align-items: center;
@@ -1159,7 +1164,7 @@ justify-content: center;  height: 100%;
 }
 
 .card {
-  width: 400px;
+  width: 500px;
   background-color: #252525;
   border-radius: 5px;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
@@ -1177,13 +1182,14 @@ justify-content: center;  height: 100%;
 }
 
 .chat-window {
-  height: 500px;
+  height: 600px;
+  width: 500px;
   overflow-y: scroll;
 }
 
 .message-list {
   list-style: none;
-  margin: 0;
+  margin-top: 0;
   padding: 0;
 }
 
@@ -1220,4 +1226,25 @@ justify-content: center;  height: 100%;
   background-color: rgb(255, 255, 255);
   color: rgb(0, 0, 0);
   box-shadow: 0 4px 18px 0 rgba(0, 0, 0, 0.25);
+}
+
+
+
+.email-green {
+  color: green;
+}
+
+.email-red {
+  color: red;
+}
+
+.link-file {
+  text-decoration: none; /* Supprime le soulignement */
+  color: #007bff; /* Couleur bleue par défaut pour le lien, vous pouvez la changer */
+  font-weight: bold; /* Rend le texte en gras */
+  transition: all 0.2s ease-in-out; /* Transition douce pour les changements d'état */
+}
+
+.message-list li {
+  padding: 10px; /* Ajoute de l'espace autour du contenu de chaque message */
 }
