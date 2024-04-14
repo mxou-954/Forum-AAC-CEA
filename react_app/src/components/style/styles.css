@@ -546,6 +546,17 @@ a {
   border-radius: 20px;
 }
 
+@media (max-width: 1400px) {
+
+
+  .forum_ajouterImage {
+    height: 200px; /* Ajustement de la hauteur */
+    width: 320px; /* Ajustement de la largeur */
+    margin-top: 5%; /* Réduction de la marge supérieure */
+    margin-left: 5%; /* Réduction de la marge gauche */
+  }
+}
+
 .forum_wrapper_left_h2{
   margin-top: 10%;
   
@@ -725,7 +736,21 @@ a {
   border-radius: 20px;
 }
 
+@media (max-width: 1400px) {
+  .forum_div_photos img {
+    max-width: 90%; /* Ajustement pour réduire la largeur maximale */
+    padding: 5%; /* Réduction du padding pour s'adapter à l'espace plus petit */
+    padding-right: 20%; /* Réduction du padding droit */
+  }
 
+  .image-container {
+    margin-top: 15px; /* Réduction de l'espacement entre les images */
+  }
+
+  .forum_div_photos {
+    padding: 0 5%; /* Ajout de padding sur les côtés pour un meilleur rendu */
+  }
+}
 
 
 
@@ -853,6 +878,19 @@ overflow-y: auto;
   top: 5px;
   font-size: 0.7em;
   font-weight: 600;
+}
+
+@media (max-width: 1400px) {
+  .form_titre_forum {
+    max-width: 280px; /* Réduction de la largeur maximale */
+    padding: 15px; /* Ajustement du padding */
+    margin-top: 5%; /* Réduction de la marge supérieure */
+    margin-left: 5%; /* Réduction de la marge gauche */
+  }
+
+  .form_titre_forum label .input {
+    padding: 15px 0px 05px 0px; /* Ajustement du padding vertical */
+  }
 }
 
 .like-button{
