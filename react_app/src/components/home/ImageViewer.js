@@ -8,31 +8,38 @@ const ImageViewer = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   
+  // Charger l'image et les messages
   useEffect(() => {
+    // Charge les détails de l'image
     fetch(`http://localhost:3000/api/image/${fileId}`)
       .then(res => {
-        // Stockez le titre et la description depuis les headers
         const title = res.headers.get('X-Photo-Title');
         const description = res.headers.get('X-Photo-Description');
-        console.log({ title, description }); // Ajoutez ceci pour déboguer
-
         return res.blob().then(blob => {
           const imageUrl = URL.createObjectURL(blob);
           setImageData({ title, description, imageUrl });
         });
       })
       .catch(err => console.error(err));
-  }, [fileId]);
+
+    // Charge les messages liés à l'image
+    fetch(`http://localhost:3000/api/messages/${fileId}`)
+      .then(res => res.json())
+      .then(data => {
+        setMessages(data);
+      })
+      .catch(err => console.error('Error fetching messages:', err));
+  }, [fileId]);  // Le tableau de dépendances assure que l'effet s'exécute à nouveau si fileId change
 
   const sendMessage = async () => {
     if (!newMessage.trim() && !document.getElementById('fileInput').files.length) return;
-  
+
     const formData = new FormData();
     if (document.getElementById('fileInput').files.length) {
       formData.append('file', document.getElementById('fileInput').files[0]);
     }
     formData.append('text', newMessage);
-  
+
     try {
       const response = await fetch(`http://localhost:3000/api/upload/${fileId}`, {
         method: 'POST',
@@ -51,7 +58,6 @@ const ImageViewer = () => {
     }
   };
 
-
   return (
     <div className='mid_forum'>
       <div className='wrapper_left_viewer'>
@@ -67,22 +73,21 @@ const ImageViewer = () => {
         <div className="card">
           <div className="chat-header">Chat</div>
           <div className="chat-window">
-          <ul className="message-list">
-{messages.map(msg => (
-  <li key={msg._id} className="message-item">
-  <span className={(msg.email || '').includes('courbeyrette') ? 'email-red' : 'email-green'}>
-      {msg.email}
-    </span>: 
-    {msg.text}
-    {/* Assurez-vous que cette condition est bien testée et que msg.fileUrl est utilisé */}
-    {msg.fileUrl && (
-      <a href={msg.fileUrl} target="_blank" rel="noopener noreferrer" className="link-file">Voir le fichier</a>
-    )}
-  </li>
-))}
-</ul>   </div>
+            <ul className="message-list">
+              {messages.map(msg => (
+                <li key={msg._id} className="message-item">
+                  <span className={(msg.email || '').includes('courbeyrette') ? 'email-red' : 'email-green'}>
+                    {msg.email}
+                  </span>: 
+                  {msg.text}
+                  {msg.fileUrl && (
+                    <a href={msg.fileUrl} target="_blank" rel="noopener noreferrer" className="link-file">Voir le fichier</a>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
           <div className="chat-input">
-          
             <input 
               type="text" 
               className="message-input" 
@@ -91,13 +96,12 @@ const ImageViewer = () => {
               onChange={e => setNewMessage(e.target.value)} 
             />
             <button className="send-button" onClick={sendMessage}>Send</button>
+          </div>
+          <input type="file" id="fileInput" />
+        </div>
       </div>
-      <input type="file" id="fileInput" />
-    </div>
-  
-    </div>
     </div>
   );
-}
+};
 
-export default ImageViewer; 
+export default ImageViewer;

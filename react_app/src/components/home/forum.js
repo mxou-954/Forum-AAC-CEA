@@ -11,6 +11,9 @@ export default function Connexion() {
 const [description, setDescription] = useState('');
 const [file, setFile] = useState(null);
 
+const [likes, setLikes] = useState({});
+
+
   const handleButtonClick = () => {
     fileInputRef.current.click();
   };
@@ -47,15 +50,25 @@ const [file, setFile] = useState(null);
   };
   
   const fetchImages = () => {
-    fetch('http://localhost:3000/api/image', { credentials: 'include' }) // Ajout de credentials: 'include'
-    .then(response => response.json())
+    fetch('http://localhost:3000/api/image', { credentials: 'include' })
+      .then(response => response.json())
       .then(data => {
-        // Construire les URLs des images à partir des fileId
+        // Conserver la manière dont les images sont traitées
         const imageUrls = data.images.map(img => `http://localhost:3000/api/image/${img.fileId}`);
         setImages(imageUrls); // Stocker les URLs dans l'état
+  
+        // Nouveau: Mise à jour de l'état des likes
+        const newLikes = {};
+        data.images.forEach(img => {
+          newLikes[img.fileId] = img.likes || 0; // S'assurer que chaque image a un like défini, ou 0 par défaut
+        });
+        setLikes(newLikes); // Mettre à jour l'état des likes
       })
       .catch(error => console.error('Error fetching images:', error));
   };
+  
+
+
   
   useEffect(() => {
     fetchImages(); // Appeler fetchImages au montage du composant pour charger toutes les images disponibles
@@ -85,6 +98,20 @@ const [file, setFile] = useState(null);
     }
   };
 
+  const handleLike = (fileId) => {
+    fetch(`http://localhost:3000/api/photo/like/${fileId}`, {
+      method: 'POST',
+    })
+    .then(response => response.json())
+    .then(data => {
+      // Mettre à jour l'état des likes avec le nouveau nombre de likes retourné
+      setLikes(prevLikes => ({ ...prevLikes, [fileId]: data.likes }));
+    })
+    .catch(error => {
+      console.error('Error liking photo:', error);
+    });
+  };
+
   const handleDownload = async (fileId) => {
     try {
       const response = await fetch(`http://localhost:3000/api/image/download/${fileId}`);
@@ -102,6 +129,16 @@ const [file, setFile] = useState(null);
       window.URL.revokeObjectURL(downloadUrl);
     } catch (error) {
       console.error('Download failed:', error);
+    }
+  };
+
+  const handleSaveImage = (fileId) => {
+    // Récupérer les images sauvegardées depuis le localStorage
+    let savedImages = JSON.parse(localStorage.getItem('savedImages')) || [];
+    // Ajouter le nouvel ID d'image si pas déjà présent
+    if (!savedImages.includes(fileId)) {
+      savedImages.push(fileId);
+      localStorage.setItem('savedImages', JSON.stringify(savedImages));
     }
   };
 
@@ -175,17 +212,17 @@ const [file, setFile] = useState(null);
           </Link>
 
 
-        <button className="like-button">
-        <span class="IconContainer_like">
+          <button className="like-button" onClick={() => handleLike(fileId)}>
+                  <span class="IconContainer_like">
         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-heart-filled" height="1.5em" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
   <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
   <path d="M6.979 3.074a6 6 0 0 1 4.988 1.425l.037 .033l.034 -.03a6 6 0 0 1 4.733 -1.44l.246 .036a6 6 0 0 1 3.364 10.008l-.18 .185l-.048 .041l-7.45 7.379a1 1 0 0 1 -1.313 .082l-.094 -.082l-7.493 -7.422a6 6 0 0 1 3.176 -10.215z" stroke-width="0" fill="currentColor" />
 </svg>
   </span>
-  <p class="text_like">Like</p>
+  <p className="text_like">Like ({likes[fileId] || 0})</p>
         </button>
 
-        <button class="bookmarkBtn">
+        <button className="bookmarkBtn" onClick={() => handleSaveImage(fileId)}>
   <span class="IconContainer">
     <svg viewBox="0 0 384 512" height="1.2em" class="icon">
       <path
