@@ -5,7 +5,9 @@ export default function Connexion() {
     
   return (
     <div className='mid_rules'> 
-    <h1 className='title_rules'>Bienvenue sur le forum !</h1>
+    <div className="div_title">
+        <h1 className="title">Les règles du forum : </h1>
+      </div>
     <div className="ligneHorizontale"></div>
     <div className='wrapper_div_rules'>
     

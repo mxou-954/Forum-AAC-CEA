@@ -45,16 +45,16 @@ const Navbar = () => {
         <h3>AAC-CEA-PHOTO</h3>
         <ul className="menu">
           <li className="menu-item">
-            <Link to="/forum"><div className="icon"><i aria-hidden="true" className="ti ti-clipboard-data"></i></div><span>Forum</span></Link>
+            <Link to="/forum"><div className="icon"><i aria-hidden="true" className="ti ti-message-2"></i></div><span>Forum</span></Link>
           </li>
           <li className="menu-item">
             <Link to="/règles"><div className="icon"><i aria-hidden="true" className="ti ti-speakerphone"></i></div><span>Règles</span></Link>
           </li>
           <li className="menu-item">
-            <Link to="/mesPhotos"><div className="icon"><i aria-hidden="true" className="ti ti-brand-cashapp"></i></div><span>Mes photos</span></Link>
+            <Link to="/mesPhotos"><div className="icon"><i aria-hidden="true" className="ti ti-photo-plus"></i></div><span>Mes photos</span></Link>
           </li>
           <li className="menu-item">
-            <Link to="/photosEnregistrees"><div className="icon"><i aria-hidden="true" className="ti ti-sparkles"></i></div><span>Photos enregistrées</span></Link>
+            <Link to="/photosEnregistrees"><div className="icon"><i aria-hidden="true" className="ti ti-download"></i></div><span>Photos enregistrées</span></Link>
           </li>
         </ul>
       </div>
@@ -62,16 +62,16 @@ const Navbar = () => {
         <h3>AUTRES</h3>
         <ul className="menu">
           <li className="menu-item">
-            <Link to="/legal"><div className="icon"><i aria-hidden="true" className="ti ti-building-bank"></i></div><span>Légal</span></Link>
+            <Link to="/legal"><div className="icon"><i aria-hidden="true" className="ti ti-gavel"></i></div><span>Légal</span></Link>
           </li>
           <li className="menu-item">
-            <Link to="/Contact"><div className="icon"><i aria-hidden="true" className="ti ti-wallet"></i></div><span>nous contacter</span></Link>
+            <Link to="/Contact"><div className="icon"><i aria-hidden="true" className="ti ti-address-book"></i></div><span>nous contacter</span></Link>
           </li>
           <li className="menu-item">
-            <Link to="/LogIn"><div className="icon"><i aria-hidden="true" className="ti ti-user"></i></div><span>mon compte</span></Link>
+            <Link to="/LogIn"><div className="icon"><i aria-hidden="true" className="ti ti-user-check"></i></div><span>Compte</span></Link>
           </li>
           <li className="menu-item">
-            <Link to="/Options"><div className="icon"><i aria-hidden="true" className="ti ti-settings-filled"></i></div><span>options</span></Link>
+            <Link to="/Options"><div className="icon"><i aria-hidden="true" className="ti ti-settings"></i></div><span>options</span></Link>
           </li>
         </ul>
       </div>

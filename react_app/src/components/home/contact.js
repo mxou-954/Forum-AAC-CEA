@@ -46,31 +46,31 @@ export default function HomePage() {
   return (
     <div className='mid'>
       <form className="form" onSubmit={handleSubmit}>
-        <p className="title">Contact</p>
+        <p className="title-sec">Contact</p>
         <p className="message">Contactez-nous en cas de soucis sur le site.</p>
         <div className="flex">
           <label>
-            <input className="input" type="text" required value={prenom} onChange={e => setPrenom(e.target.value)} />
+            <input className="input-form" type="text" required value={prenom} onChange={e => setPrenom(e.target.value)} />
             <span>Prénom</span>
           </label>
 
           <label>
-            <input className="input" type="text" required value={nom} onChange={e => setNom(e.target.value)} />
+            <input className="input-form" type="text" required value={nom} onChange={e => setNom(e.target.value)} />
             <span>Nom</span>
           </label>
         </div>
 
         <label>
-          <input className="input" type="email" required value={email} onChange={e => setEmail(e.target.value)} />
+          <input className="input-form" type="email" required value={email} onChange={e => setEmail(e.target.value)} />
           <span>Email</span>
         </label>
 
         <label>
-          <input className="input" type="text" required value={objet} onChange={e => setObjet(e.target.value)} />
+          <input className="input-form" type="text" required value={objet} onChange={e => setObjet(e.target.value)} />
           <span>Objet</span>
         </label>
         <label>
-          <input className="input" type="text" required value={message} onChange={e => setMessage(e.target.value)} />
+          <input className="input-form" type="text" required value={message} onChange={e => setMessage(e.target.value)} />
           <span>Message</span>
         </label>
         <button className="submit" type="submit">Envoyer</button>

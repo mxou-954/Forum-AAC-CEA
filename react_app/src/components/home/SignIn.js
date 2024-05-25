@@ -81,7 +81,7 @@ export default function Connexion() {
     return (
       <div className='mid'>
         <form className="form">
-          <p className="title">Vous êtes connecté !</p>
+          <p className="title-sec">Vous êtes connecté !</p>
           <p className="message">Vous bénéficiez du forum !</p>
           <button className='deconnexion' onClick={handleDeconnexion}>Déconnexion</button>
         </form>
@@ -91,14 +91,14 @@ export default function Connexion() {
     return (
       <div className='mid'>
         <form className="form" onSubmit={handleSubmit}>
-          <p className="title">Se connecter</p>
+          <p className="title-sec">Se connecter</p>
           <p className="message">Connectez-vous pour bénéficier du forum !</p>
           <label>
-            <input className="input" type="email" required value={email} onChange={e => setEmail(e.target.value)} />
+            <input className="input-form" type="email" required value={email} onChange={e => setEmail(e.target.value)} />
             <span>Email</span>
           </label>
           <label>
-            <input className="input" type="password" required value={password} onChange={e => setPassword(e.target.value)} />
+            <input className="input-form" type="password" required value={password} onChange={e => setPassword(e.target.value)} />
             <span>Password</span>
           </label>
           <button className="submit" type="submit">Se Connecter</button>
