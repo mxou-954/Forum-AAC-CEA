@@ -1051,6 +1051,35 @@ a {
     0 0 25px rgb(0, 140, 255), 0 0 50px rgb(0, 140, 255);
 }
 
+.button_delete_flex {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.shaddow__btn {
+  padding: 10px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  color: #fff;
+  border-radius: 7px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  transition: 0.5s;
+  transition-property: box-shadow;
+  cursor: pointer;
+  background: rgb(0, 140, 255);
+  box-shadow: 0 0 15px rgb(0, 140, 255);
+}
+
+.shaddow__btn:hover {
+  box-shadow: 0 0 5px rgb(0, 140, 255), 0 0 10px rgb(0, 140, 255),
+    0 0 25px rgb(0, 140, 255), 0 0 50px rgb(0, 140, 255);
+}
+
 @media (min-width: 1401px) and (max-width: 2000px) {
   .forum_div_photos img {
     width: 90%; /* Pour occuper toute la largeur du conteneur parent */
@@ -1103,7 +1132,7 @@ a {
 }
 
 .card {
-  width: 500px;
+  width: 400px;
   background-color: #252525;
   border-radius: 5px;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
@@ -1120,8 +1149,8 @@ a {
 }
 
 .chat-window {
-  height: 600px;
-  width: 500px;
+  height: 500px;
+  width: 400px;
   overflow-y: scroll;
 }
 
@@ -1151,7 +1180,8 @@ a {
 .send-button {
   border: none;
   outline: none;
-  background-color: #333;
+  background: rgb(0, 140, 255);
+  box-shadow: 0 0 15px rgb(0, 140, 255);
   color: #fff;
   font-size: 14px;
   padding: 5px 10px;
@@ -1161,9 +1191,10 @@ a {
 }
 
 .send-button:hover {
-  background-color: rgb(255, 255, 255);
-  color: rgb(0, 0, 0);
-  box-shadow: 0 4px 18px 0 rgba(0, 0, 0, 0.25);
+  background: rgb(0, 140, 255);
+  color: white;
+  box-shadow: 0 0 5px rgb(0, 140, 255), 0 0 10px rgb(0, 140, 255),
+  0 0 25px rgb(0, 140, 255), 0 0 50px rgb(0, 140, 255);
 }
 
 .email-green {
@@ -1272,14 +1303,13 @@ a {
   margin-top: 5%;
 }
 
-.redirection{
+.redirection {
   text-decoration: none;
   padding: 5px;
-  color:white ;
+  color: white;
   border-radius: 20px;
   background: rgb(0, 140, 255);
   box-shadow: 0 0 15px rgb(0, 140, 255);
-
 }
 
 .loader {
@@ -1351,12 +1381,18 @@ a {
   }
 }
 
-
 .loader_myphotos {
   width: 175px;
   height: 80px;
   display: block;
-  background-image: radial-gradient(circle 25px at 25px 25px, #FFF 100%, transparent 0), radial-gradient(circle 50px at 50px 50px, #FFF 100%, transparent 0), radial-gradient(circle 25px at 25px 25px, #FFF 100%, transparent 0), linear-gradient(#FFF 50px, transparent 0);
+  background-image: radial-gradient(
+      circle 25px at 25px 25px,
+      #fff 100%,
+      transparent 0
+    ),
+    radial-gradient(circle 50px at 50px 50px, #fff 100%, transparent 0),
+    radial-gradient(circle 25px at 25px 25px, #fff 100%, transparent 0),
+    linear-gradient(#fff 50px, transparent 0);
   background-size: 50px 50px, 100px 76px, 50px 50px, 120px 40px;
   background-position: 0px 30px, 37px 0px, 122px 30px, 25px 40px;
   background-repeat: no-repeat;
@@ -1365,7 +1401,7 @@ a {
 }
 
 .loader_myphotos::before {
-  content: '';
+  content: "";
   left: 60px;
   bottom: 18px;
   position: absolute;
@@ -1373,14 +1409,27 @@ a {
   height: 36px;
   border-radius: 50%;
   background: rgb(0, 140, 255);
-  background-image: radial-gradient(circle 8px at 18px 18px, #FFF 100%, transparent 0), radial-gradient(circle 4px at 18px 0px, #FFF 100%, transparent 0), radial-gradient(circle 4px at 0px 18px, #FFF 100%, transparent 0), radial-gradient(circle 4px at 36px 18px, #FFF 100%, transparent 0), radial-gradient(circle 4px at 18px 36px, #FFF 100%, transparent 0), radial-gradient(circle 4px at 30px 5px, #FFF 100%, transparent 0), radial-gradient(circle 4px at 30px 5px, #FFF 100%, transparent 0), radial-gradient(circle 4px at 30px 30px, #FFF 100%, transparent 0), radial-gradient(circle 4px at 5px 30px, #FFF 100%, transparent 0), radial-gradient(circle 4px at 5px 5px, #FFF 100%, transparent 0);
+  background-image: radial-gradient(
+      circle 8px at 18px 18px,
+      #fff 100%,
+      transparent 0
+    ),
+    radial-gradient(circle 4px at 18px 0px, #fff 100%, transparent 0),
+    radial-gradient(circle 4px at 0px 18px, #fff 100%, transparent 0),
+    radial-gradient(circle 4px at 36px 18px, #fff 100%, transparent 0),
+    radial-gradient(circle 4px at 18px 36px, #fff 100%, transparent 0),
+    radial-gradient(circle 4px at 30px 5px, #fff 100%, transparent 0),
+    radial-gradient(circle 4px at 30px 5px, #fff 100%, transparent 0),
+    radial-gradient(circle 4px at 30px 30px, #fff 100%, transparent 0),
+    radial-gradient(circle 4px at 5px 30px, #fff 100%, transparent 0),
+    radial-gradient(circle 4px at 5px 5px, #fff 100%, transparent 0);
   background-repeat: no-repeat;
   box-sizing: border-box;
   animation: rotationBack 3s linear infinite;
 }
 
 .loader_myphotos::after {
-  content: '';
+  content: "";
   left: 94px;
   bottom: 15px;
   position: absolute;
@@ -1388,7 +1437,20 @@ a {
   height: 24px;
   border-radius: 50%;
   background: rgb(0, 140, 255);
-  background-image: radial-gradient(circle 5px at 12px 12px, #FFF 100%, transparent 0), radial-gradient(circle 2.5px at 12px 0px, #FFF 100%, transparent 0), radial-gradient(circle 2.5px at 0px 12px, #FFF 100%, transparent 0), radial-gradient(circle 2.5px at 24px 12px, #FFF 100%, transparent 0), radial-gradient(circle 2.5px at 12px 24px, #FFF 100%, transparent 0), radial-gradient(circle 2.5px at 20px 3px, #FFF 100%, transparent 0), radial-gradient(circle 2.5px at 20px 3px, #FFF 100%, transparent 0), radial-gradient(circle 2.5px at 20px 20px, #FFF 100%, transparent 0), radial-gradient(circle 2.5px at 3px 20px, #FFF 100%, transparent 0), radial-gradient(circle 2.5px at 3px 3px, #FFF 100%, transparent 0);
+  background-image: radial-gradient(
+      circle 5px at 12px 12px,
+      #fff 100%,
+      transparent 0
+    ),
+    radial-gradient(circle 2.5px at 12px 0px, #fff 100%, transparent 0),
+    radial-gradient(circle 2.5px at 0px 12px, #fff 100%, transparent 0),
+    radial-gradient(circle 2.5px at 24px 12px, #fff 100%, transparent 0),
+    radial-gradient(circle 2.5px at 12px 24px, #fff 100%, transparent 0),
+    radial-gradient(circle 2.5px at 20px 3px, #fff 100%, transparent 0),
+    radial-gradient(circle 2.5px at 20px 3px, #fff 100%, transparent 0),
+    radial-gradient(circle 2.5px at 20px 20px, #fff 100%, transparent 0),
+    radial-gradient(circle 2.5px at 3px 20px, #fff 100%, transparent 0),
+    radial-gradient(circle 2.5px at 3px 3px, #fff 100%, transparent 0);
   background-repeat: no-repeat;
   box-sizing: border-box;
   animation: rotationBack 4s linear infinite reverse;
@@ -1410,14 +1472,14 @@ a {
 }
 
 .loader__eye1,
-  .loader__eye2,
-  .loader__mouth1,
-  .loader__mouth2 {
+.loader__eye2,
+.loader__mouth1,
+.loader__mouth2 {
   animation: eye1 3s ease-in-out infinite;
 }
 
 .loader__eye1,
-  .loader__eye2 {
+.loader__eye2 {
   transform-origin: 64px 64px;
 }
 
@@ -1447,7 +1509,7 @@ a {
   }
 
   50%,
-    60% {
+  60% {
     animation-timing-function: cubic-bezier(0.17, 0, 0.58, 1);
     transform: rotate(-40deg) translate(0, -56px) scale(1);
   }
@@ -1471,7 +1533,7 @@ a {
   }
 
   55%,
-    70% {
+  70% {
     animation-timing-function: cubic-bezier(0, 0, 0.28, 1);
     transform: rotate(40deg) translate(0, -56px) rotate(-40deg) scale(1);
   }
@@ -1483,9 +1545,9 @@ a {
 
 @keyframes eyeBlink {
   from,
-    25%,
-    75%,
-    to {
+  25%,
+  75%,
+  to {
     transform: scaleY(1);
   }
 
@@ -1515,7 +1577,7 @@ a {
   }
 
   75%,
-    to {
+  to {
     visibility: hidden;
   }
 }
@@ -1536,4 +1598,3 @@ a {
     stroke-dashoffset: -351.86;
   }
 }
-

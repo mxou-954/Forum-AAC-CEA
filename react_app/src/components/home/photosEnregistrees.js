@@ -53,9 +53,14 @@ export default function PhotosEnregistrees() {
                   alt="Saved"
                 />
               </Link>
-              <button onClick={() => handleDelete(fileId)}>
-                Supprimer de mes photos
-              </button>
+              <div className="button_delete_flex">
+                <button
+                  className="shaddow__btn"
+                  onClick={() => handleDelete(fileId)}
+                >
+                  Supprimer de mes photos
+                </button>
+              </div>
               <div className="ligneHorizontaleInside"></div>
             </div>
           ))}
