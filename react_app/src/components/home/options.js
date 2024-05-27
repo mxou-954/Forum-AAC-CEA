@@ -10,7 +10,17 @@ const sampleCodes = [
   'fetch("/api/data").then(response => response.json());',
   'ReactDOM.render(<App />, document.getElementById("root"));',
   '// This is a comment',
-  'for (let i = 0; i < items.length; i++) { console.log(items[i]); }'
+  'for (let i = 0; i < items.length; i++) { console.log(items[i]); }',
+  'const [state, setState] = useState(initialState);',
+  'useEffect(() => { document.title = "Hello React"; }, []);',
+  'try { let data = JSON.parse(jsonString); } catch (error) { console.error(error); }',
+  'class MyComponent extends React.Component { render() { return <div>Hello!</div>; } }',
+  'const handleClick = () => alert("Button clicked!");',
+  'const element = <h1>Hello, world!</h1>;',
+  'const App = () => <div>Welcome to my app!</div>;',
+  'const items = ["item1", "item2", "item3"].map(item => <li key={item}>{item}</li>);',
+  'async function fetchData() { const response = await fetch("/api/data"); const data = await response.json(); return data; }',
+  'new Promise((resolve, reject) => { setTimeout(() => resolve("done!"), 1000); });'
 ];
 
 const ConstructionPage = () => {
@@ -66,7 +76,7 @@ const ConstructionPage = () => {
           left: dot.left
         }}
       >
-        <p style={styles.dotText}>{dot.code}</p>
+
       </div>
     )}
   </div>
