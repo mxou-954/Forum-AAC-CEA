@@ -349,7 +349,7 @@ app.get("/api/image/:fileId", async (req, res) => {
   }
 });
 
-app.get("/api/image", async (req, res) => {
+app.get("/api/image", checkAuth, async (req, res) => {
   try {
     const bucket = new mongoose.mongo.GridFSBucket(conn.db, {
       bucketName: "photos",
