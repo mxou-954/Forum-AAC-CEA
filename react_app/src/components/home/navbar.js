@@ -54,7 +54,7 @@ const Navbar = () => {
             <Link to="/mesPhotos"><div className="icon"><i aria-hidden="true" className="ti ti-photo-plus"></i></div><span>Mes photos</span></Link>
           </li>
           <li className="menu-item">
-            <Link to="/photosEnregistrees"><div className="icon"><i aria-hidden="true" className="ti ti-download"></i></div><span>Photos enregistrées</span></Link>
+            <Link to="/photosEnregistrees"><div className="icon"><i aria-hidden="true" className="ti ti-download"></i></div><span>Enregistrements</span></Link>
           </li>
         </ul>
       </div>

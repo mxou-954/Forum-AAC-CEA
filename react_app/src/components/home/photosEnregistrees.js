@@ -49,7 +49,7 @@ export default function PhotosEnregistrees() {
                 {" "}
                 <img
                   src={`http://localhost:3000/api/image/${fileId}`}
-                  className="image"
+                  className="image_mmy"
                   alt="Saved"
                 />
               </Link>

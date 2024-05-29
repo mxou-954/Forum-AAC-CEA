@@ -16,6 +16,9 @@ import Options from './components/home/options';
 import Mesphotos from './components/home/mesPhotos';
 import Photosenregistrees from './components/home/photosEnregistrees';
 import Legal from './components/home/legal';
+import DossierPhotos from './components/home/dossierPhotos';
+import DossierViewer from './components/home/dossierViewer';
+
 
 function App() {
   return (
@@ -28,6 +31,9 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path='/forum' element={<Forum />} />
         <Route path="/image/:fileId" element={<ImageViewer />} />
+        <Route path="/dossier_event/:fileId/:photoId" element={<DossierViewer />} />
+        <Route path="/image/dossierEvenement/:fileId" element={<DossierPhotos />} />
+        <Route path="/image/dossierEvenement/:fileId/:photo.photoId" element={<DossierPhotos />} />
         <Route path='/règles' element={<Regles />} />
         <Route path='/mesPhotos' element={<Mesphotos />} />
         <Route path='/photosEnregistrees' element={<Photosenregistrees />} />
