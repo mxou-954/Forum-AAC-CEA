@@ -66,8 +66,6 @@ app.use(
 );
 
 app.use((req, res, next) => {
-  console.log("Session Access:", req.sessionID);
-  console.log("Session Data:", req.session);
   next();
 });
 
@@ -83,12 +81,10 @@ const Connexion = mongoose.model("Connexion", connexionSchema);
 app.post("/api/inscription", async (req, res) => {
   const { email, first_name, last_name, password } = req.body;
   if (!email || !first_name || !last_name || !password) {
-    return res
-      .status(400)
-      .send({
-        erreur:
-          "Un des champs de connexion n'est pas correctement remplis. Veuillez remplir tous les champs !",
-      });
+    return res.status(400).send({
+      erreur:
+        "Un des champs de connexion n'est pas correctement remplis. Veuillez remplir tous les champs !",
+    });
   }
 
   const connexion = new Connexion({
@@ -102,18 +98,14 @@ app.post("/api/inscription", async (req, res) => {
     const nouvelUtilisateur = await connexion.save();
     res.status(200).send(nouvelUtilisateur);
   } catch (erreur) {
-    res
-      .status(400)
-      .send({
-        erreur:
-          "Impossible de sauvegarder votre compte dans notre base de données !",
-      });
+    res.status(400).send({
+      erreur:
+        "Impossible de sauvegarder votre compte dans notre base de données !",
+    });
   }
 });
 
 app.use((req, res, next) => {
-  console.log("Session ID:", req.sessionID);
-  console.log("Session Data:", req.session);
   next();
 });
 
@@ -145,8 +137,6 @@ app.post("/api/connexion", async (req, res) => {
       req.session.userId = utilisateur._id;
       req.session.email = utilisateur.email; // Stockez l'email dans la session
 
-      console.log("Session userID après connexion:", req.session.userId);
-      console.log("Session email après connexion:", req.session.email);
 
       res.send({
         message: "Connexion réussie !",
@@ -166,17 +156,14 @@ app.post("/api/connexion", async (req, res) => {
 });
 
 function checkAuth(req, res, next) {
-  console.log("Session Data in checkAuth:", req.session); // Afficher les détails de la session
   if (req.session.userId) {
     next();
   } else {
-    console.log("Session or userId not found in checkAuth");
     res.status(401).send({ message: "Non authentifié" });
   }
 }
 
 app.get("/api/verifier-connexion", (req, res) => {
-  console.log("Session userID:", req.session.userId);
   if (req.session.userId) {
     res.send({ estConnecte: true });
   } else {
@@ -196,12 +183,10 @@ app.get("/api/profil/:id", async (req, res) => {
 
     if (!profil_find) {
       // Si le profil n'est pas trouvé, envoyer une réponse et arrêter l'exécution
-      return res
-        .status(400)
-        .send({
-          erreur:
-            "Nous ne trouvons pas votre profil dans notre base de donnée...",
-        });
+      return res.status(400).send({
+        erreur:
+          "Nous ne trouvons pas votre profil dans notre base de donnée...",
+      });
     }
 
     // Si le profil est trouvé, envoyer la réponse avec le profil
@@ -229,7 +214,6 @@ app.post("/api/photo", checkAuth, upload.single("image"), async (req, res) => {
     return res.status(400).send("No file uploaded");
   }
 
-  console.log("Session Data avant la création de la photo:", req.session);
 
   const bucket = new mongoose.mongo.GridFSBucket(conn.db, {
     bucketName: "photos",
@@ -256,7 +240,6 @@ app.post("/api/photo", checkAuth, upload.single("image"), async (req, res) => {
         return res.status(400).send("User not authenticated");
       }
 
-      console.log("Tentative de création d'une photo avec userId:", userId);
 
       await PhotoInfo.create({
         title,
@@ -265,12 +248,10 @@ app.post("/api/photo", checkAuth, upload.single("image"), async (req, res) => {
         fileId,
         userId,
       }); // Inclure userId lors de la création
-      res
-        .status(201)
-        .send({
-          fileId,
-          message: "Fichier et informations téléchargés avec succès",
-        });
+      res.status(201).send({
+        fileId,
+        message: "Fichier et informations téléchargés avec succès",
+      });
     } catch (error) {
       console.error("Erreur lors de la création de la photo:", error);
       res.status(500).send("Erreur lors de la sauvegarde des informations");
@@ -355,17 +336,14 @@ app.get("/api/image", checkAuth, async (req, res) => {
       bucketName: "photos",
     });
 
-    console.log("Recherche des fichiers dans GridFS");
 
     let files = [];
     await bucket.find({}).forEach((doc) => files.push(doc));
 
     if (!files.length) {
-      console.log("Aucun fichier trouvé");
       return res.status(404).send("Aucun fichier trouvé");
     }
 
-    console.log("Fichiers trouvés :", files);
 
     // Récupérer les informations supplémentaires depuis la collection PhotoInfo
     const photoInfos = await PhotoInfo.find({
@@ -385,7 +363,6 @@ app.get("/api/image", checkAuth, async (req, res) => {
       likes: likesMap[file._id.toString()] || 0, // Fournir une valeur par défaut de 0 si aucun like n'est trouvé
     }));
 
-    console.log("Réponse envoyée :", response);
     res.json({ images: response });
   } catch (error) {
     console.error("Erreur lors de la récupération des fichiers", error);
@@ -460,8 +437,6 @@ app.post("/api/photo/like/:fileId", async (req, res) => {
 });
 
 app.get("/test-session", (req, res) => {
-  console.log("Session ID:", req.sessionID);
-  console.log("Session Data:", req.session);
   res.status(200).json({
     sessionId: req.sessionID,
     sessionData: req.session,
@@ -552,12 +527,10 @@ app.post("/api/mail", checkAuth, async (req, res) => {
     const { message } = req.body;
 
     if (!utilisateur || !message) {
-      res
-        .status(400)
-        .send({
-          erreur:
-            "Vous devex vous autentifier et mettre un message pour poster sur le forum",
-        });
+      res.status(400).send({
+        erreur:
+          "Vous devex vous autentifier et mettre un message pour poster sur le forum",
+      });
     }
 
     const msg = new Mail({
@@ -600,6 +573,266 @@ app.post("/api/sendEmail", (req, res) => {
       res.status(200).send("E-mail envoyé avec succès.");
     }
   });
+});
+
+
+
+
+
+
+
+
+
+
+const DossierEvenementSchema = new mongoose.Schema({
+  title: String,
+  description: String,
+  fileId: mongoose.Schema.Types.ObjectId,
+  userWhoPost: String,
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  likes: { type: Number, default: 0 },
+  likedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+  photosContenu: [
+    {
+      photoId: mongoose.Schema.Types.ObjectId, // ID du fichier dans GridFS
+      title: String,
+      description: String,
+    }
+  ]
+});
+
+const DossierEvenement = mongoose.model("DossierEvenement", DossierEvenementSchema);
+
+
+
+app.post(
+  "/api/dossier-evenement",
+  checkAuth,
+  upload.array("images"),
+  async (req, res) => {
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).send("No files uploaded");
+    }
+
+    const bucket = new mongoose.mongo.GridFSBucket(conn.db, {
+      bucketName: "photos",
+    });
+
+    const photoUploadPromises = req.files.map((file) => {
+      return new Promise((resolve, reject) => {
+        const uploadStream = bucket.openUploadStream(file.originalname);
+        const fileId = uploadStream.id;
+
+        uploadStream.write(file.buffer);
+        uploadStream.end();
+
+        uploadStream.on("error", (error) => {
+          console.error("Erreur lors de l'upload du fichier:", error);
+          reject(error);
+        });
+
+        uploadStream.on("finish", () => {
+          console.log(`Fichier ${file.originalname} uploadé avec succès avec l'ID ${fileId}`);
+          resolve({
+            photoId: fileId, // Utilisez photoId ici
+            title: file.originalname,
+            description: "",
+          });
+        });
+      });
+    });
+
+    try {
+      const uploadedPhotos = await Promise.all(photoUploadPromises);
+
+      console.log("Photos uploadées:", uploadedPhotos);
+
+      const { title, description } = req.body;
+      const userId = req.session.userId;
+      const userWhoPost = req.session.userId;
+
+      if (!userId) {
+        console.error("Erreur: userId n'est pas défini dans la session.");
+        return res.status(400).send("User not authenticated");
+      }
+
+      await DossierEvenement.create({
+        title,
+        description,
+        userWhoPost,
+        userId,
+        photosContenu: uploadedPhotos,
+      });
+
+      res.status(201).send({
+        message: "Dossier d'événement et photos téléchargés avec succès",
+      });
+    } catch (error) {
+      console.error("Erreur lors du téléchargement du dossier d'événement:", error);
+      res.status(500).send("Erreur lors du téléchargement du dossier d'événement");
+    }
+  }
+);
+
+
+app.get("/api/photosEvenements_dossier", async (req, res) => {
+  try {
+    const dossiers = await DossierEvenement.find({}).lean();
+
+    if (!dossiers.length) {
+      return res.status(404).send("Aucun dossier trouvé");
+    }
+
+    const response = dossiers.map((dossier) => ({
+      title: dossier.title,
+      description: dossier.description,
+      fileId: dossier._id.toString(),
+      photosContenu: dossier.photosContenu // Inclure les photos
+    }));
+
+    res.json({ dossiers: response });
+  } catch (error) {
+    console.error("Erreur lors de la récupération des dossiers", error);
+    res.status(500).send("Erreur lors de la récupération des dossiers");
+  }
+});
+
+app.get("/api/photosEvenements_dossier/:fileId", async (req, res) => {
+  try {
+    const { fileId } = req.params;
+    console.log("ID du dossier reçu:", fileId);
+
+    const dossier = await DossierEvenement.findOne({
+      _id: mongoose.Types.ObjectId.createFromHexString(fileId),
+    }).lean();
+
+    if (!dossier) {
+      console.log("Dossier non trouvé");
+      return res.status(404).send("Dossier non trouvé");
+    }
+
+    console.log("Dossier trouvé:", dossier);
+
+    res.json({ photos: dossier.photosContenu });
+  } catch (error) {
+    console.error("Erreur lors de la récupération des dossiers ", error);
+    res.status(500).send("Erreur serveur");
+  }
+});
+
+app.get("/api/photosEvenements_dossier/:fileId/:photoId", async (req, res) => {
+  try {
+    const { fileId, photoId } = req.params;
+
+    // Recherchez le dossier correspondant
+    const dossier = await DossierEvenement.findOne({
+      _id: new mongoose.Types.ObjectId(fileId),
+    }).lean();
+
+    if (!dossier) {
+      console.log("Dossier non trouvé");
+      return res.status(404).send("Dossier non trouvé");
+    }
+
+    // Recherchez la photo spécifique dans le dossier
+    const photo = dossier.photosContenu.find(
+      (photo) => photo._id.toString() === photoId
+    );
+
+    if (!photo) {
+      console.log("Photo non trouvée dans ce dossier");
+      return res.status(404).send("Photo non trouvée dans ce dossier");
+    }
+
+    console.log(`Photo trouvée avec ID: ${photo.photoId}`);
+
+    // Initialisez le GridFSBucket
+    const bucket = new mongoose.mongo.GridFSBucket(conn.db, {
+      bucketName: "photos",
+    });
+
+    // Téléchargez le fichier de la photo
+    bucket.openDownloadStream(new mongoose.Types.ObjectId(photo.photoId))
+      .pipe(res)
+      .on("error", (error) => {
+        console.error("Erreur lors du téléchargement du fichier:", error);
+        res.status(500).send("Erreur lors du téléchargement du fichier");
+      })
+      .on("finish", () => {
+        console.log(`Fichier ${photo.photoId} téléchargé avec succès`);
+      });
+  } catch (error) {
+    console.error("Erreur serveur", error);
+    res.status(500).send("Erreur serveur");
+  }
+});
+
+app.get("/api/image_doss/:fileId/:photoId", async (req, res) => {
+  try {
+    const { fileId, photoId } = req.params;
+
+    // Recherchez le dossier correspondant
+    const dossier = await DossierEvenement.findOne({
+      _id: new mongoose.Types.ObjectId(fileId),
+    }).lean();
+
+    if (!dossier) {
+      console.log("Dossier non trouvé");
+      return res.status(404).send("Dossier non trouvé");
+    }
+
+    // Recherchez la photo spécifique dans le dossier
+    const photo = dossier.photosContenu.find(
+      (photo) => photo._id.toString() === photoId
+    );
+
+    if (!photo) {
+      console.log("Photo non trouvée dans ce dossier");
+      return res.status(404).send("Photo non trouvée dans ce dossier");
+    }
+
+    console.log(`Photo trouvée avec ID: ${photo.photoId}`);
+
+    // Initialisez le GridFSBucket
+    const bucket = new mongoose.mongo.GridFSBucket(conn.db, {
+      bucketName: "photos",
+    });
+
+    // Ajoutez des en-têtes pour les métadonnées
+    res.setHeader("X-Photo-Title", photo.title);
+    res.setHeader("X-Photo-Description", photo.description);
+
+    // Téléchargez le fichier de la photo
+    bucket.openDownloadStream(new mongoose.Types.ObjectId(photo.photoId))
+      .pipe(res)
+      .on("error", (error) => {
+        console.error("Erreur lors du téléchargement du fichier:", error);
+        res.status(500).send("Erreur lors du téléchargement du fichier");
+      })
+      .on("finish", () => {
+        console.log(`Fichier ${photo.photoId} téléchargé avec succès`);
+      });
+  } catch (error) {
+    console.error("Erreur serveur", error);
+    res.status(500).send("Erreur serveur");
+  }
+});
+
+
+app.get("/api/photosEvenements_dossier_ids", async (req, res) => {
+  try {
+    const dossiers = await DossierEvenement.find({}, 'photosContenu').lean();
+
+    const photoIds = dossiers.reduce((acc, dossier) => {
+      dossier.photosContenu.forEach(photo => acc.push(photo.photoId.toString()));
+      return acc;
+    }, []);
+
+    res.json({ photoIds });
+  } catch (error) {
+    console.error("Erreur lors de la récupération des IDs des photos des dossiers", error);
+    res.status(500).send("Erreur lors de la récupération des IDs des photos des dossiers");
+  }
 });
 
 app.use((req, res, next) => {
