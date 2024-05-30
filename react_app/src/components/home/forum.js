@@ -87,7 +87,7 @@ export default function Connexion() {
         formData.append("description", description);
         formData.append("image", compressedFile);
 
-        const response = await fetch("http://localhost:3000/api/photo", {
+        const response = await fetch("https://forum-aac-photo.fr/api/photo", {
           method: "POST",
           body: formData,
           credentials: "include",
@@ -137,7 +137,7 @@ export default function Connexion() {
           formData.append("images", compressedFile);
         }
 
-        const response = await fetch("http://localhost:3000/api/dossier-evenement", {
+        const response = await fetch("https://forum-aac-photo.fr/api/dossier-evenement", {
           method: "POST",
           body: formData,
           credentials: "include",
@@ -159,17 +159,17 @@ export default function Connexion() {
 
   useEffect(() => {
     // Récupérer les images
-    fetch("http://localhost:3000/api/image", { credentials: 'include' })
+    fetch("https://forum-aac-photo.fr/api/image", { credentials: 'include' })
       .then((response) => response.json())
       .then((data) => {
-        setImages(data.images.map((image) => `http://localhost:3000/api/image/${image.fileId}`));
+        setImages(data.images.map((image) => `https://forum-aac-photo.fr/api/image/${image.fileId}`));
       })
       .catch((error) => {
         console.error("Erreur lors de la récupération des images :", error);
       });
 
     // Récupérer les dossiers
-    fetch("http://localhost:3000/api/photosEvenements_dossier", { credentials: 'include' })
+    fetch("https://forum-aac-photo.fr/api/photosEvenements_dossier", { credentials: 'include' })
       .then((response) => response.json())
       .then((data) => {
         setDossiers(data.dossiers || []);
@@ -191,12 +191,12 @@ export default function Connexion() {
 
 
   const fetchImages = () => {
-    fetch("http://localhost:3000/api/image", { credentials: "include" })
+    fetch("https://forum-aac-photo.fr/api/image", { credentials: "include" })
       .then((response) => response.json())
       .then((data) => {
         // Conserver la manière dont les images sont traitées
         const imageUrls = data.images.map(
-          (img) => `http://localhost:3000/api/image/${img.fileId}`
+          (img) => `https://forum-aac-photo.fr/api/image/${img.fileId}`
         );
         setImages(imageUrls); // Stocker les URLs dans l'état
 
@@ -215,7 +215,7 @@ export default function Connexion() {
   }, []);
 
   const fetchDoss = () => {
-    fetch("http://localhost:3000/api/photosEvenements_dossier")
+    fetch("https://forum-aac-photo.fr/api/photosEvenements_dossier")
       .then(response => response.json())
       .then(data => setDossiers(data.dossiers))
       .catch(error => console.error("Error fetching dossiers:", error));
@@ -223,7 +223,7 @@ export default function Connexion() {
 
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/verifier-connexion", {
+    fetch("https://forum-aac-photo.fr/api/verifier-connexion", {
       credentials: "include",
     })
       .then((response) => response.json())
@@ -239,7 +239,7 @@ export default function Connexion() {
   }, []);
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/photosEvenements_dossier", {
+    fetch("https://forum-aac-photo.fr/api/photosEvenements_dossier", {
       credentials: "include",
     })
       .then((response) => response.json())
@@ -274,7 +274,7 @@ export default function Connexion() {
     }
   
     try {
-      const response = await fetch(`http://localhost:3000/api/image/${fileId}`, {
+      const response = await fetch(`https://forum-aac-photo.fr/api/image/${fileId}`, {
         method: "DELETE",
       });
   
@@ -293,7 +293,7 @@ export default function Connexion() {
   };
 
   const handleLike = (fileId) => {
-    fetch(`http://localhost:3000/api/photo/like/${fileId}`, {
+    fetch(`https://forum-aac-photo.fr/api/photo/like/${fileId}`, {
       method: "POST",
       credentials: "include", // Pour inclure les cookies de session dans la requête
     })
@@ -328,7 +328,7 @@ export default function Connexion() {
     }
 
     try {
-      const response = await fetch(`http://localhost:3000/api/dossier-evenement/${dossierId}`, {
+      const response = await fetch(`https://forum-aac-photo.fr/api/dossier-evenement/${dossierId}`, {
         method: "DELETE",
         credentials: "include",
       });
@@ -349,7 +349,7 @@ export default function Connexion() {
   const handleDownload = async (fileId) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/image/download/${fileId}`
+        `https://forum-aac-photo.fr/api/image/download/${fileId}`
       );
       if (!response.ok) {
         throw new Error("Network response was not ok");
