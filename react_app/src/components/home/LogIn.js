@@ -29,7 +29,7 @@ export default function Connexion() {
     };
 
     try {
-      const response = await fetch("http://localhost:3000/api/inscription", {
+      const response = await fetch("https://forum-aac-photo.fr/api/inscription", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
