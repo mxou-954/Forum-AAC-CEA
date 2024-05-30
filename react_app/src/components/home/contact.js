@@ -22,7 +22,7 @@ export default function HomePage() {
 
     
     
-    fetch('http://localhost:3000/api/sendEmail', {
+    fetch('https://forum-aac-photo.fr/api/sendEmail', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
