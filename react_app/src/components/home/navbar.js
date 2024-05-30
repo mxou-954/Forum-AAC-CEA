@@ -13,7 +13,7 @@ const Navbar = () => {
     console.log("UserID récupéré du localStorage:", userId);
     
     if (userId) {
-      fetch(`http://localhost:3000/api/profil/${userId}`, {
+      fetch(`https://forum-aac-photo.fr/api/profil/${userId}`, {
         credentials: 'include'
       })
       .then(response => response.json())
