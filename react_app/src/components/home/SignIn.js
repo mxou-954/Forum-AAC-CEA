@@ -11,7 +11,7 @@ export default function Connexion() {
   const { setUser } = useUser(); // Utilisez le hook useUser pour accéder à user et setUser
 
   useEffect(() => {
-    fetch('http://localhost:3000/api/verifier-connexion', {
+    fetch('https://forum-aac-photo.fr/api/verifier-connexion', {
       credentials: 'include'
     })
     .then(response => response.json())
@@ -33,7 +33,7 @@ export default function Connexion() {
     };
   
     try {
-      const response = await fetch('http://localhost:3000/api/connexion', {
+      const response = await fetch('https://forum-aac-photo.fr/api/connexion', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -59,7 +59,7 @@ export default function Connexion() {
 
   const handleDeconnexion = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/deconnexion', {
+      const response = await fetch('https://forum-aac-photo.fr/api/deconnexion', {
         method: 'POST',
         credentials: 'include',
       });
