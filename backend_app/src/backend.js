@@ -9,18 +9,30 @@ const nodemailer = require("nodemailer");
 const bodyParser = require("body-parser");
 const multer = require("multer");
 const sendingUpload = multer({ dest: "uploads/" }); // Configurez selon vos besoins
-
+const fs = require('fs');
 const Grid = require("gridfs-stream");
 let gfs;
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
+const path = require('path');
+const https = require('https');
+
+
+const privateKeyPath = '/etc/letsencrypt/live/forum-aac-photo.fr/privkey.pem';
+const certificatePath = '/etc/letsencrypt/live/forum-aac-photo.fr/cert.pem';
+const caPath = '/etc/letsencrypt/live/forum-aac-photo.fr/chain.pem';
+
+const options = {
+  key: fs.readFileSync(privateKeyPath, 'utf8'),
+  cert: fs.readFileSync(certificatePath, 'utf8'),
+  ca: fs.readFileSync(caPath, 'utf8'), // Chaîne de certificats intermédiaires
+};
 
 app.use(
   cors({
     origin: "http://localhost:3001", // Spécifiez l'origine de votre application frontend
     credentials: true, // Permet l'envoi de cookies de session avec les requêtes
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-
     exposedHeaders: ["X-Photo-Title", "X-Photo-Description"],
     allowedHeaders: [
       "Content-Type",
@@ -36,7 +48,7 @@ app.use(
 
 app.use(express.json());
 
-const uri = "mongodb://localhost:27017/Forum";
+const uri = "mongodb+srv://null404:Pingouin95@cluster0.h6mir5r.mongodb.net/?retryWrites=true&w=majority&appName=Forum";
 
 // Amélioration de la gestion de la connexion
 mongoose
@@ -57,16 +69,41 @@ app.use(
     resave: false,
     saveUninitialized: false, // N'enregistre pas les sessions non modifiées
     cookie: {
-      secure: false, // Utilisez `secure: true` seulement si vous êtes en HTTPS
+      secure: true, // Utilisez `secure: true` car vous êtes en HTTPS
       httpOnly: true,
       maxAge: 86400000, // 24 heures
+      sameSite: 'strict' // Optionnel, renforce la sécurité du cookie
     },
     store: MongoStore.create({ mongoUrl: uri }),
   })
 );
 
+// Middleware pour rediriger HTTP vers HTTPS
 app.use((req, res, next) => {
+  if (req.secure || req.headers['x-forwarded-proto'] === 'https') {
+    return next();
+  }
+  res.redirect('https://' + req.headers.host + req.url);
+});
+
+// Créer le serveur HTTPS
+https.createServer(options, app).listen(8443, () => {
+  console.log('HTTPS Server running on port 8443');
+});
+
+// Facultatif : rediriger les requêtes HTTP vers HTTPS
+const http = require('http');
+const httpApp = express();
+
+httpApp.use((req, res, next) => {
+  if (!req.secure) {
+    return res.redirect('https://' + req.headers.host + req.url);
+  }
   next();
+});
+
+http.createServer(httpApp).listen(8080, () => {
+  console.log('HTTP Server running on port 8080 and redirecting to HTTPS');
 });
 
 const connexionSchema = new mongoose.Schema({
@@ -880,9 +917,4 @@ app.delete("/api/dossier-evenement/:dossierId", checkAuth, async (req, res) => {
 
 app.use((req, res, next) => {
   res.status(404).send({ message: `Route ${req.url} non trouvée.` });
-});
-
-const port = 3000;
-app.listen(port, () => {
-  console.log(`Serveur démarré sur http://localhost:${port}`);
 });
