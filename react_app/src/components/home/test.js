@@ -6,7 +6,7 @@ export default function Connexion() {
 
 
     useEffect(() => {
-      fetch('http://localhost:3000/api/verifier-connexion', {
+      fetch('https://forum-aac-photo.fr/api/verifier-connexion', {
       credentials: 'include'
   })
   .then(response => response.json())
