@@ -15,7 +15,7 @@ const DossierViewer = () => {
   // Charger l'image et les messages
   useEffect(() => {
     // Charge les détails de l'image
-    fetch(`http://localhost:3000/api/image_doss/${fileId}/${photoId}`)
+    fetch(`https://forum-aac-photo.fr/api/image_doss/${fileId}/${photoId}`)
       .then((res) => {
         const title = res.headers.get("X-Photo-Title");
         const description = res.headers.get("X-Photo-Description");
@@ -27,7 +27,7 @@ const DossierViewer = () => {
       .catch((err) => console.error(err));
 
     // Charge les messages liés à l'image
-    fetch(`http://localhost:3000/api/messages/${fileId}`)
+    fetch(`https://forum-aac-photo.fr/api/messages/${fileId}`)
       .then((res) => res.json())
       .then((data) => {
         setMessages(data);
@@ -50,7 +50,7 @@ const DossierViewer = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:3000/api/upload/${fileId}`,
+        `https://forum-aac-photo.fr/api/upload/${fileId}`,
         {
           method: "POST",
           body: formData,
