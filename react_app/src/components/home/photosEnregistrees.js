@@ -14,7 +14,7 @@ export default function PhotosEnregistrees() {
   }, []);
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/verifier-connexion", {
+    fetch("https://forum-aac-photo.fr/api/verifier-connexion", {
       credentials: "include",
     })
       .then((response) => response.json())
@@ -48,7 +48,7 @@ export default function PhotosEnregistrees() {
               <Link to={`/image/${fileId}`}>
                 {" "}
                 <img
-                  src={`http://localhost:3000/api/image/${fileId}`}
+                  src={`https://forum-aac-photo.fr/api/image/${fileId}`}
                   className="image_mmy"
                   alt="Saved"
                 />
