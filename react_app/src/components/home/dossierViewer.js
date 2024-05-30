@@ -72,15 +72,30 @@ const DossierViewer = () => {
     }
   };
 
+  const handleImageClick = () => {
+    const imgElement = document.getElementById('fullScreenImage');
+    if (imgElement.requestFullscreen) {
+      imgElement.requestFullscreen();
+    } else if (imgElement.mozRequestFullScreen) { // Firefox
+      imgElement.mozRequestFullScreen();
+    } else if (imgElement.webkitRequestFullscreen) { // Chrome, Safari and Opera
+      imgElement.webkitRequestFullscreen();
+    } else if (imgElement.msRequestFullscreen) { // IE/Edge
+      imgElement.msRequestFullscreen();
+    }
+  };
+
   return (
     <div className="mid_forum">
       <div className="wrapper_left_viewer">
         {imageData.imageUrl && (
           <>
             <img
+              id="fullScreenImage"
               src={imageData.imageUrl}
               alt="Uploaded Content"
-              style={{ maxWidth: "70%", height: "auto" }}
+              style={{ maxWidth: "70%", height: "auto", cursor: "pointer" }}
+              onClick={handleImageClick}
             />
           </>
         )}

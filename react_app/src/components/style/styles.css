@@ -992,26 +992,50 @@ a {
   width: 100%;
   self-align: stretch;
 }
-
 .forum_div_photos {
   background-color: #181818;
   width: 100%;
   height: 90%;
   overflow-y: auto; /* Ajoute une barre de défilement verticale seulement si nécessaire */
-
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 20px 0;
 }
 
-.forum_div_photos img {
-  width: 100%;
+.image-container {
+  width: 95%; /* Ajustez la largeur selon vos besoins */
+  max-width: 800px; /* Largeur maximale pour les images */
+  margin-bottom: 20px;
+  position: relative; /* Pour le positionnement absolu des éléments enfants */
+}
+
+.image-container img {
+  max-width: 100%;
+  max-height: 600px; /* Limite la hauteur maximale des images */
+  width: auto;
+  height: auto;
   border-radius: 20px;
+  object-fit: contain; /* Contient l'image sans la déformer */
+}
+
+/* Media query pour les écrans de largeur maximale 1400px */
+@media (max-width: 1400px) {
+  .forum_div_photos {
+    padding: 0 5%; /* Ajout de padding sur les côtés pour un meilleur rendu */
+  }
+
+  .image-container {
+    margin-bottom: 15px; /* Réduction de l'espacement entre les images */
+  }
+
+  .image-container img {
+    max-width: 100%; /* Ajustement pour réduire la largeur maximale */
+    max-height: 300px; /* Réduction de la hauteur maximale pour les écrans plus petits */
+  }
 }
 
 .image-container {
-  width: 90%;
   margin-bottom: 20px; /* Espacement entre chaque groupe image-boutons */
   background-color: #0f0f0f;
   border-radius: 20px;
@@ -1076,25 +1100,7 @@ a {
     0 0 25px rgb(0, 140, 255), 0 0 50px rgb(0, 140, 255);
 }
 
-@media (min-width: 1401px) and (max-width: 2000px) {
-  .forum_div_photos img {
-    width: 90%; /* Pour occuper toute la largeur du conteneur parent */
-  }
-}
 
-@media (max-width: 1400px) {
-  .forum_div_photos img {
-    width: 100%; /* Ajustement pour réduire la largeur maximale */
-  }
-
-  .image-container {
-    margin-bottom: 15px; /* Réduction de l'espacement entre les images */
-  }
-
-  .forum_div_photos {
-    padding: 0 5%; /* Ajout de padding sur les côtés pour un meilleur rendu */
-  }
-}
 
 @media (max-width: 1400px) {
   .wrapper_right {
@@ -1116,6 +1122,16 @@ a {
   margin: 0 auto;
   text-align: center;
 }
+
+
+
+.wrapper_left_viewer img {
+  max-width: 100%;
+  max-height: 80vh; /* Adjust this value as needed */
+  width: auto;
+  height: auto;
+}
+
 .wrapper_left_viewer p {
   margin-bottom: 20px;
 }
@@ -1605,6 +1621,8 @@ a {
   margin-top: 50px;
 }
 
+
+
 .milieu_verti_sidebar {
   display: flex;
   justify-content: center; /* Centre les éléments horizontalement */
@@ -1669,6 +1687,7 @@ a {
   text-decoration: none;
 }
 .title_sidebar {
+  margin-top: 30px;
   margin-bottom: 30px;
   padding: 1rem;
   margin-bottom: 4rem;
@@ -1684,14 +1703,38 @@ a {
   text-decoration: none;
 }
 
-div.sidebar .dossier {
+
+#toggleButtonDelete {
+  transition: transform 0.5s ease-in-out;
+  padding: 10px;
+  background: rgb(0, 140, 255);
+  color: white;
+  box-shadow: 0 0 5px rgb(0, 140, 255), 0 0 10px rgb(0, 140, 255),
+    0 0 215px rgb(0, 140, 255), 0 0 25px rgb(0, 140, 255);
+  border: none;
+  cursor: pointer;
+  border-radius: 10px;
+  margin-bottom: 50px;
+}
+
+.relativeDIV {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   padding: 1rem;
   margin-bottom: 2rem;
   background-color: #0e0e0ea2;
-
   border-radius: 20px;
   box-sizing: border-box;
 }
+
+.dossier {
+  flex: 1;
+  text-align: center;
+}
+
+
+
 
 div.sidebar .dossiers {
   width: 80%;

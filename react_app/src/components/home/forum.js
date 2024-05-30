@@ -2,9 +2,12 @@ import React, { useState, useRef, useEffect } from "react";
 import { useUser } from "../../UserContext";
 import "../style/styles.css";
 import { Link } from "react-router-dom";
+import imageCompression from 'browser-image-compression';
+
 
 export default function Connexion() {
-  const fileInputRef = useRef(null);
+  const singleFileInputRef = useRef(null);
+  const multipleFileInputRef = useRef(null);
   const [fileName, setFileName] = useState("Aucun fichier sélectionné");
   const [fileNames, setFileNames] = useState([]);
   const [images, setImages] = useState([]);
@@ -37,54 +40,73 @@ export default function Connexion() {
     }
 
     setFilesDossier(selectedFiles);
-    setFileNames(selectedFileNames);
+    setFileNames(selectedFileNames); // Mise à jour de fileNames pour les fichiers de dossier
   };
 
-  const handleButtonClick = () => {
-    fileInputRef.current.click();
+  const handleSingleFileButtonClick = () => {
+    singleFileInputRef.current.click();
+  };
+
+  const handleMultipleFileButtonClick = () => {
+    multipleFileInputRef.current.click();
   };
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
-    setFileName(file ? file.name : "Aucun fichier sélectionné");
+    setFile(file);
+    setFileName(file ? file.name : "Aucun fichier sélectionné"); // Mise à jour de fileName pour le fichier unique
   };
 
 
-  const handleSubmit = () => {
+
+  const handleSubmit = async () => {
     const userConfirmed = window.confirm(
       "\nAVERTISSEMENT\n\n <──────|   Si vous postez cette photo, vous consentez aux règles du forum de la rubrique 'Règles'. Vous consentez également à ce que les autres utilisateurs puissent télécharger l'image et l'utiliser.   |──────>\n\nÊtes-vous sûr de vouloir poster cette photo ? "
     );
     if (userConfirmed) {
-      const file = fileInputRef.current.files[0];
+      const file = singleFileInputRef.current.files[0];
       if (!file) {
         alert("Veuillez sélectionner un fichier");
         return;
       }
 
-      const formData = new FormData();
-      formData.append("title", title);
-      formData.append("description", description);
-      formData.append("image", file);
+      console.log("Original file size:", file.size / 1024, "KB");
 
-      fetch("http://localhost:3000/api/photo", {
-        method: "POST",
-        body: formData,
-        credentials: "include", // Utilisez 'include' pour envoyer les cookies
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log("Success:", data);
-          fetchImages(); // Fonction pour récupérer les images après l'upload
-        })
-        .catch((error) => {
-          console.error("Error:", error);
+      const options = {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 800,
+        useWebWorker: true,
+      };
+
+      try {
+        const compressedFile = await imageCompression(file, options);
+        console.log("Compressed file size:", compressedFile.size / 1024, "KB");
+
+        const formData = new FormData();
+        formData.append("title", title);
+        formData.append("description", description);
+        formData.append("image", compressedFile);
+
+        const response = await fetch("http://localhost:3000/api/photo", {
+          method: "POST",
+          body: formData,
+          credentials: "include",
         });
-    } else {
-      return;
+
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const data = await response.json();
+        console.log("Success:", data);
+        fetchImages(); // Fonction pour récupérer les images après l'upload
+      } catch (error) {
+        console.error("Error:", error);
+      }
     }
   };
 
-  const handleSubmitDossier = () => {
+  const handleSubmitDossier = async () => {
     const userConfirmed = window.confirm(
       "\nAVERTISSEMENT\n\n <──────|   Si vous postez cette photo, vous consentez aux règles du forum de la rubrique 'Règles'. Vous consentez également à ce que les autres utilisateurs puissent télécharger l'image et l'utiliser.   |──────>\n\nÊtes-vous sûr de vouloir poster cette photo ? "
     );
@@ -97,25 +119,40 @@ export default function Connexion() {
       const formData = new FormData();
       formData.append("title", titleDossier);
       formData.append("description", descriptionDossier);
-      for (let i = 0; i < filesDossier.length; i++) {
-        formData.append("images", filesDossier[i]); // Utilisez 'images[]' pour télécharger plusieurs fichiers
-      }
 
-      fetch("http://localhost:3000/api/dossier-evenement", {
-        method: "POST",
-        body: formData,
-        credentials: "include", // Utilisez 'include' pour envoyer les cookies
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log("Success:", data);
-          fetchImages(); // Fonction pour récupérer les images après l'upload
-        })
-        .catch((error) => {
-          console.error("Error:", error);
+      const options = {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 800,
+        useWebWorker: true,
+      };
+
+      try {
+        for (let i = 0; i < filesDossier.length; i++) {
+          const file = filesDossier[i];
+          console.log("Original file size:", file.size / 1024, "KB");
+
+          const compressedFile = await imageCompression(file, options);
+          console.log("Compressed file size:", compressedFile.size / 1024, "KB");
+
+          formData.append("images", compressedFile);
+        }
+
+        const response = await fetch("http://localhost:3000/api/dossier-evenement", {
+          method: "POST",
+          body: formData,
+          credentials: "include",
         });
-    } else {
-      return;
+
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const data = await response.json();
+        console.log("Success:", data);
+        fetchImages(); // Fonction pour récupérer les images après l'upload
+      } catch (error) {
+        console.error("Error:", error);
+      }
     }
   };
 
@@ -173,6 +210,17 @@ export default function Connexion() {
       .catch((error) => console.error("Error fetching images:", error));
   };
 
+  useEffect(() => {
+    fetchDoss();
+  }, []);
+
+  const fetchDoss = () => {
+    fetch("http://localhost:3000/api/photosEvenements_dossier")
+      .then(response => response.json())
+      .then(data => setDossiers(data.dossiers))
+      .catch(error => console.error("Error fetching dossiers:", error));
+  };
+
 
   useEffect(() => {
     fetch("http://localhost:3000/api/verifier-connexion", {
@@ -220,25 +268,25 @@ export default function Connexion() {
     const isConfirmed = window.confirm(
       "\nAVERTISSEMENT\n\n <──────|   Êtes-vous sûr de vouloir supprimer cette image ? Le serveur est auto-modéré. Si l'image ne vous appartient pas, ne la supprimez pas, sauf si l'image ne respecte pas les règles de la rubrique 'Règles'.   |──────>"
     );
-
+  
     if (!isConfirmed) {
       return; // Si l'utilisateur annule, ne rien faire
     }
-
+  
     try {
-      const response = await fetch(
-        `http://localhost:3000/api/image/${fileId}`,
-        {
-          method: "DELETE",
-        }
-      );
+      const response = await fetch(`http://localhost:3000/api/image/${fileId}`, {
+        method: "DELETE",
+      });
+  
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-
-      // Logique pour gérer la suppression côté client, comme rafraîchir la liste d'images ou retirer l'image supprimée du DOM
+  
+      // Logique pour gérer la suppression côté client
       console.log("Image supprimée avec succès");
-      // Ici, vous pouvez ajouter la logique pour rafraîchir la liste des images ou informer l'utilisateur de la suppression réussie
+      
+      // Recharger la page après la suppression
+      window.location.reload();
     } catch (error) {
       console.error("Erreur lors de la suppression de l'image:", error);
     }
@@ -247,16 +295,56 @@ export default function Connexion() {
   const handleLike = (fileId) => {
     fetch(`http://localhost:3000/api/photo/like/${fileId}`, {
       method: "POST",
+      credentials: "include", // Pour inclure les cookies de session dans la requête
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          // Si la réponse n'est pas "ok", traiter les différentes erreurs
+          return response.json().then((error) => {
+            throw new Error(error.message);
+          });
+        }
+        return response.json();
+      })
       .then((data) => {
         // Mettre à jour l'état des likes avec le nouveau nombre de likes retourné
         setLikes((prevLikes) => ({ ...prevLikes, [fileId]: data.likes }));
       })
       .catch((error) => {
-        console.error("Error liking photo:", error);
+        // Afficher un message d'erreur approprié
+        console.error("Vous avez déja liké cette image :)");
+        alert("Vous avez déja liké cette image :)"); // Affiche une alerte avec le message d'erreur
       });
   };
+
+
+  const handleDeleteDoss = async (dossierId) => {
+    const isConfirmed = window.confirm(
+      "\nAVERTISSEMENT\n\n <──────|   Êtes-vous sûr de vouloir supprimer ce dossier ? Le serveur est auto-modéré. Si l'image ne vous appartient pas, ne la supprimez pas, sauf si l'image ne respecte pas les règles de la rubrique 'Règles'.   |──────>"
+    );
+
+    if (!isConfirmed) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:3000/api/dossier-evenement/${dossierId}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+
+      if (response.ok) {
+        fetchDoss();
+      } else {
+        const data = await response.json();
+        throw new Error(data.message);
+      }
+    } catch (error) {
+      console.error("Erreur lors de la suppression du dossier:", error);
+      alert("Erreur lors de la suppression du dossier.");
+    }
+  };
+
 
   const handleDownload = async (fileId) => {
     try {
@@ -307,25 +395,22 @@ export default function Connexion() {
               <h1 className="title_sidebar">Dossiers photos liées a différents évènements</h1>
 
               <div className="dossiers">
-                {dossiers.length > 0 ? (
-                  dossiers.map((dossier, index) => {
-                    console.log("Dossier:", dossier); // Vérifiez les données ici
-                    return (
-                      <Link
-                        to={`/image/dossierEvenement/${dossier.fileId}`}
-                        key={index}
-                      >
-                        <div className="dossier">
-                          <h3>{dossier.title}</h3>
-                          <p>{dossier.description}</p>
-                        </div>
-                      </Link>
-                    );
-                  })
-                ) : (
-                  <p>Aucun dossier trouvé.</p>
-                )}
-              </div>
+  {dossiers.length > 0 ? (
+    dossiers.map((dossier, index) => (
+      <div className="relativeDIV" key={index}>
+        <Link to={`/image/dossierEvenement/${dossier.fileId}`} className="dossier">
+          <div>
+            <h3>{dossier.title}</h3>
+            <p>{dossier.description}</p>
+          </div>
+        </Link>
+        <button id="toggleButtonDelete" onClick={() => handleDeleteDoss(dossier.fileId)}>Delete</button>
+      </div>
+    ))
+  ) : (
+    <p>Aucun dossier trouvé.</p>
+  )}
+</div>
             </div></div>
             
             <div className="flex_wrap">   
@@ -343,33 +428,36 @@ export default function Connexion() {
           <div className="forum_ajouterImage">
             <h2 className="forum_wrapper_left_h2">Ajouter Une Photo</h2>
             <div className="forum_div_button">
-              <button
-                className="button_Import"
-                type="button"
-                onClick={handleButtonClick}
-              >
-                <span className="button__text">Download</span>
-                <span className="button__icon">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 35 35"
-                    id="bdd05811-e15d-428c-bb53-8661459f9307"
-                    data-name="Layer 2"
-                    class="svg"
-                  >
-                    <path d="M17.5,22.131a1.249,1.249,0,0,1-1.25-1.25V2.187a1.25,1.25,0,0,1,2.5,0V20.881A1.25,1.25,0,0,1,17.5,22.131Z"></path>
-                    <path d="M17.5,22.693a3.189,3.189,0,0,1-2.262-.936L8.487,15.006a1.249,1.249,0,0,1,1.767-1.767l6.751,6.751a.7.7,0,0,0,.99,0l6.751-6.751a1.25,1.25,0,0,1,1.768,1.767l-6.752,6.751A3.191,3.191,0,0,1,17.5,22.693Z"></path>
-                    <path d="M31.436,34.063H3.564A3.318,3.318,0,0,1,.25,30.749V22.011a1.25,1.25,0,0,1,2.5,0v8.738a.815.815,0,0,0,.814.814H31.436a.815.815,0,0,0,.814-.814V22.011a1.25,1.25,0,1,1,2.5,0v8.738A3.318,3.318,0,0,1,31.436,34.063Z"></path>
-                  </svg>
-                </span>
-              </button>
-              <input
-                type="file"
-                ref={fileInputRef}
-                style={{ display: "none" }}
-                onChange={handleFileChange}
-              />
-              <div className="name_file">{fileName}</div>
+            <button
+        className="button_Import"
+        type="button"
+        onClick={handleSingleFileButtonClick}
+      >
+        <span className="button__text">Download</span>
+        <span className="button__icon">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 35 35"
+            id="bdd05811-e15d-428c-bb53-8661459f9307"
+            data-name="Layer 2"
+            className="svg"
+          >
+            <path d="M17.5,22.131a1.249,1.249,0,0,1-1.25-1.25V2.187a1.25,1.25,0,0,1,2.5,0V20.881A1.25,1.25,0,0,1,17.5,22.131Z"></path>
+            <path d="M17.5,22.693a3.189,3.189,0,0,1-2.262-.936L8.487,15.006a1.249,1.249,0,0,1,1.767-1.767l6.751,6.751a.7.7,0,0,0,.99,0l6.751-6.751a1.25,1.25,0,0,1,1.768,1.767l-6.752,6.751A3.191,3.191,0,0,1,17.5,22.693Z"></path>
+            <path d="M31.436,34.063H3.564A3.318,3.318,0,0,1,.25,30.749V22.011a1.25,1.25,0,0,1,2.5,0v8.738a.815.815,0,0,0,.814.814H31.436a.815.815,0,0,0,.814-.814V22.011a1.25,1.25,0,1,1,2.5,0v8.738A3.318,3.318,0,0,1,31.436,34.063Z"></path>
+          </svg>
+        </span>
+      </button>
+      <input
+        type="file"
+        ref={singleFileInputRef}
+        style={{ display: 'none' }}
+        onChange={handleFileChange}
+      />
+      <div className="name_file">{fileName}</div>
+
+
+
               <form className="form_titre_forum" onSubmit={handleSubmit}>
                 <h2 className="forum_wrapper_h2">
                   Ajouter Titre et Description
@@ -423,44 +511,42 @@ export default function Connexion() {
               Ajouter Un Dossier Evenement
             </h2>
             <div className="forum_div_button">
-              <button
-                className="button_Import"
-                type="button"
-                onClick={handleButtonClick}
-              >
-                <span className="button__text">Download</span>
-                <span className="button__icon">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 35 35"
-                    id="bdd05811-e15d-428c-bb53-8661459f9307"
-                    data-name="Layer 2"
-                    class="svg"
-                  >
-                    <path d="M17.5,22.131a1.249,1.249,0,0,1-1.25-1.25V2.187a1.25,1.25,0,0,1,2.5,0V20.881A1.25,1.25,0,0,1,17.5,22.131Z"></path>
-                    <path d="M17.5,22.693a3.189,3.189,0,0,1-2.262-.936L8.487,15.006a1.249,1.249,0,0,1,1.767-1.767l6.751,6.751a.7.7,0,0,0,.99,0l6.751-6.751a1.25,1.25,0,0,1,1.768,1.767l-6.752,6.751A3.191,3.191,0,0,1,17.5,22.693Z"></path>
-                    <path d="M31.436,34.063H3.564A3.318,3.318,0,0,1,.25,30.749V22.011a1.25,1.25,0,0,1,2.5,0v8.738a.815.815,0,0,0,.814.814H31.436a.815.815,0,0,0,.814-.814V22.011a1.25,1.25,0,1,1,2.5,0v8.738A3.318,3.318,0,0,1,31.436,34.063Z"></path>
-                  </svg>
-                </span>
-              </button>
-              <p>20 photos maximum</p>
-              <input
-                type="file"
-                ref={fileInputRef}
-                style={{ display: "none" }}
-                onChange={handleFileDossChange}
-                multiple // Permet de sélectionner plusieurs fichiers
-                accept="image/*" // Limite les types de fichiers aux images
-                max="20" // Limite le nombre de fichiers sélectionnables à 20
-              />
-              <div className="name_file">
-                {filesDossier.length > 0 && (
-                  <div>
-                    {filesDossier.map((file, index) => (
-                      <div key={index}>{file.name}</div>
-                    ))}
-                  </div>
-                )}
+            <button
+        className="button_Import"
+        type="button"
+        onClick={handleMultipleFileButtonClick}
+      >
+        <span className="button__text">Download</span>
+        <span className="button__icon">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 35 35"
+            id="bdd05811-e15d-428c-bb53-8661459f9307"
+            data-name="Layer 2"
+            className="svg"
+          >
+            <path d="M17.5,22.131a1.249,1.249,0,0,1-1.25-1.25V2.187a1.25,1.25,0,0,1,2.5,0V20.881A1.25,1.25,0,0,1,17.5,22.131Z"></path>
+            <path d="M17.5,22.693a3.189,3.189,0,0,1-2.262-.936L8.487,15.006a1.249,1.249,0,0,1,1.767-1.767l6.751,6.751a.7.7,0,0,0,.99,0l6.751-6.751a1.25,1.25,0,0,1,1.768,1.767l-6.752,6.751A3.191,3.191,0,0,1,17.5,22.693Z"></path>
+            <path d="M31.436,34.063H3.564A3.318,3.318,0,0,1,.25,30.749V22.011a1.25,1.25,0,0,1,2.5,0v8.738a.815.815,0,0,0,.814.814H31.436a.815.815,0,0,0,.814-.814V22.011a1.25,1.25,0,1,1,2.5,0v8.738A3.318,3.318,0,0,1,31.436,34.063Z"></path>
+          </svg>
+        </span>
+      </button>
+      <input
+        type="file"
+        ref={multipleFileInputRef}
+        style={{ display: 'none' }}
+        onChange={handleFileDossChange}
+        multiple // Permet de sélectionner plusieurs fichiers
+        accept="image/*" // Limite les types de fichiers aux images
+      />
+      <div className="name_file">
+        {fileNames.length > 0 && (
+          <div>
+            {fileNames.map((fileName, index) => (
+              <div key={index}>{fileName}</div>
+            ))}
+          </div>
+        )}
               </div>
               <form className="form_titre_forum" onSubmit={handleSubmit}>
                 <h2 className="forum_wrapper_h2">

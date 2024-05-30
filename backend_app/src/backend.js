@@ -417,17 +417,30 @@ app.delete("/api/image/:fileId", async (req, res) => {
   }
 });
 
-app.post("/api/photo/like/:fileId", async (req, res) => {
+app.post("/api/photo/like/:fileId", checkAuth, async (req, res) => {
   try {
-    const photo = await PhotoInfo.findOneAndUpdate(
-      { fileId: new mongoose.Types.ObjectId(req.params.fileId) },
-      { $inc: { likes: 1 } }, // Incrémente le compteur de likes
-      { new: true } // Retourne le document mis à jour
-    );
+    const userId = req.session.userId;
+    if (!userId) {
+      return res.status(401).send("User not authenticated");
+    }
+
+    const fileId = new mongoose.Types.ObjectId(req.params.fileId);
+
+    // Vérifiez si l'utilisateur a déjà liké la photo
+    const photo = await PhotoInfo.findOne({ fileId });
 
     if (!photo) {
       return res.status(404).send("Photo non trouvée");
     }
+
+    if (photo.likedBy.includes(userId)) {
+      return res.status(400).send("Vous avez déjà liké cette photo");
+    }
+
+    // Ajouter l'utilisateur à la liste des utilisateurs ayant liké la photo
+    photo.likes += 1;
+    photo.likedBy.push(userId);
+    await photo.save();
 
     res.status(200).send({ likes: photo.likes });
   } catch (error) {
@@ -832,6 +845,36 @@ app.get("/api/photosEvenements_dossier_ids", async (req, res) => {
   } catch (error) {
     console.error("Erreur lors de la récupération des IDs des photos des dossiers", error);
     res.status(500).send("Erreur lors de la récupération des IDs des photos des dossiers");
+  }
+});
+
+app.delete("/api/dossier-evenement/:dossierId", checkAuth, async (req, res) => {
+  try {
+    const dossierId = req.params.dossierId;
+
+    // Supprimer les photos associées au dossier dans GridFS
+    const dossier = await DossierEvenement.findById(dossierId);
+    if (!dossier) {
+      return res.status(404).send("Dossier non trouvé");
+    }
+
+    const bucket = new mongoose.mongo.GridFSBucket(conn.db, {
+      bucketName: "photos",
+    });
+
+    const deletePhotoPromises = dossier.photosContenu.map(photo =>
+      bucket.delete(photo.photoId)
+    );
+
+    await Promise.all(deletePhotoPromises);
+
+    // Supprimer le dossier
+    await DossierEvenement.findByIdAndDelete(dossierId);
+
+    res.send({ message: "Dossier supprimé avec succès" });
+  } catch (error) {
+    console.error("Erreur lors de la suppression du dossier d'événement:", error);
+    res.status(500).send("Erreur serveur lors de la suppression du dossier d'événement");
   }
 });
 

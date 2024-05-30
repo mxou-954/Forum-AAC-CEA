@@ -7,7 +7,7 @@ const ImageViewer = () => {
   const [imageData, setImageData] = useState({ title: '', description: '', imageUrl: '' });
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
-  
+
   // Charger l'image et les messages
   useEffect(() => {
     // Charge les détails de l'image
@@ -58,14 +58,33 @@ const ImageViewer = () => {
     }
   };
 
+  const handleImageClick = () => {
+    const imgElement = document.getElementById('fullScreenImage');
+    if (imgElement.requestFullscreen) {
+      imgElement.requestFullscreen();
+    } else if (imgElement.mozRequestFullScreen) { // Firefox
+      imgElement.mozRequestFullScreen();
+    } else if (imgElement.webkitRequestFullscreen) { // Chrome, Safari and Opera
+      imgElement.webkitRequestFullscreen();
+    } else if (imgElement.msRequestFullscreen) { // IE/Edge
+      imgElement.msRequestFullscreen();
+    }
+  };
+
   return (
     <div className='mid_forum'>
       <div className='wrapper_left_viewer'>
-      {imageData.imageUrl && (
+        {imageData.imageUrl && (
           <>
-          <h2>{imageData.title}</h2>
-      <p>{imageData.description}</p>
-      <img src={imageData.imageUrl} alt="Uploaded Content" style={{ maxWidth: '80%', height: 'auto' }} />
+            <h2>{imageData.title}</h2>
+            <p>{imageData.description}</p>
+            <img 
+              id="fullScreenImage"
+              src={imageData.imageUrl} 
+              alt="Uploaded Content" 
+              style={{ maxWidth: '80%', height: 'auto', cursor: 'pointer' }} 
+              onClick={handleImageClick}
+            />
           </>
         )}
       </div>
