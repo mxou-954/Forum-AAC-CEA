@@ -11,7 +11,7 @@ export default function PhotosEnregistrees() {
   }, []);
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/verifier-connexion", {
+    fetch("https://forum-aac-photo.fr/api/verifier-connexion", {
       credentials: "include",
     })
       .then((response) => response.json())
@@ -28,7 +28,7 @@ export default function PhotosEnregistrees() {
 
   const fetchMyImages = async () => {
     try {
-      const response = await fetch("http://localhost:3000/api/my_pictures", {
+      const response = await fetch("https://forum-aac-photo.fr/api/my_pictures", {
         credentials: "include",
       });
       const data = await response.json();
@@ -48,7 +48,7 @@ export default function PhotosEnregistrees() {
 
   const checkImageExists = async (fileId) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/image/${fileId}`, {
+      const response = await fetch(`https://forum-aac-photo.fr/api/image/${fileId}`, {
         method: 'HEAD',
         credentials: 'include',
       });
@@ -76,7 +76,7 @@ export default function PhotosEnregistrees() {
               <Link to={`/image/${image.fileId}`}>
               
                 <img
-                  src={`http://localhost:3000/api/image/${image.fileId}`}
+                  src={`https://forum-aac-photo.fr/api/image/${image.fileId}`}
                   alt={image.title}
                   className="image_mmy"
                 />
