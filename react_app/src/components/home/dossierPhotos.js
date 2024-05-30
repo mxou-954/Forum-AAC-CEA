@@ -11,7 +11,7 @@ const DossierPhotos = () => {
   const [dossierDetails, setDossierDetails] = useState({});
 
   useEffect(() => {
-    fetch(`http://localhost:3000/api/photosEvenements_dossier/${fileId}`, {
+    fetch(`https://forum-aac-photo.fr/api/photosEvenements_dossier/${fileId}`, {
       credentials: "include",
     })
       .then((response) => response.json())
@@ -30,7 +30,7 @@ const DossierPhotos = () => {
   }, [fileId]);
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/photosEvenements_dossier", {
+    fetch("https://forum-aac-photo.fr/api/photosEvenements_dossier", {
       credentials: "include",
     })
       .then((response) => response.json())
@@ -64,7 +64,7 @@ const DossierPhotos = () => {
           <div className="photo-item" key={index}>
           <Link to={`/dossier_event/${fileId}/${photo._id}`}>
             <img
-              src={`http://localhost:3000/api/photosEvenements_dossier/${fileId}/${photo._id}`}
+              src={`https://forum-aac-photo.fr/api/photosEvenements_dossier/${fileId}/${photo._id}`}
               alt={photo.title}
             />
           </Link>
